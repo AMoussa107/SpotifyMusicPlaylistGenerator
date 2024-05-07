@@ -8,6 +8,7 @@ public class Song{
 	private String album;
 	private Integer popularity;
 	private Long duration;
+	private boolean explicit;
 	private double dance;
 	private double energy;
 	private double loudness;
@@ -18,11 +19,12 @@ public class Song{
 	private double speechiness;
 	private double tempo;
 
-	public Song(String id, String genre, String name, String[] artist, String album, Integer popularity, Long duration, double dance, double loudness, double accoustic, double instrumental, double liveness, double valence, double speechiness, double tempo) {
+	public Song(String id, String[] artist, String album, String name,   Integer popularity, Long duration, boolean explicit, double dance, double energy, double loudness, double speechiness, double accoustic, double instrumental, double liveness, double valence,  double tempo, String genre) {
 		this.id = id;
 		this.genre = genre;
 		this.name = name;
 		this.artist = artist;
+		this.energy = energy;
 		this.album = album;
 		this.popularity = popularity;
 		this.duration = duration;
@@ -55,6 +57,10 @@ public class Song{
 	public Long get_duration() {
 		return duration;
 	}
+	public double get_energy()
+	{
+		return energy;
+	}
 	public double get_dance() {
 		return dance;
 	}
@@ -79,21 +85,13 @@ public class Song{
 	public double get_tempo() {
 		return tempo;
 	}
+	public boolean get_explicit()
+	{
+		return explicit;
+	}
 
 	public static void main(String[] args) {
 		
 	}
-
-
-
-
-
-
-
-
-
-
-
-
 
 }
