@@ -33,51 +33,51 @@ public class Song{
 		this.valence = valence;
 		this.speechiness = speechiness;
 		this.tempo = tempo;
-
+}
 	public String get_name() {
 		return name;
 	}
 	public String get_id() {
-		return name;
+		return id;
 	}
 	public String get_genre() {
-		return name;
+		return genre;
 	}
 	public String[] get_artist() {
-		return name;
+		return artist;
 	}
 	public String get_album() {
-		return name;
+		return album;
 	}
 	public Integer get_popularity() {
-		return name;
+		return popularity;
 	}
 	public Long get_duration() {
-		return name;
+		return duration;
 	}
 	public double get_dance() {
-		return name;
+		return dance;
 	}
 	public double get_loudness() {
-		return name;
+		return loudness;
 	}
 	public double get_acoustic() {
-		return name;
+		return accoustic;
 	}
 	public double get_instrumental() {
-		return name;
+		return instrumental;
 	}
 	public double get_liveness() {
-		return name;
+		return liveness;
 	}
 	public double get_valence() {
-		return name;
+		return valence;
 	}
 	public double get_speechiness() {
-		return name;
+		return speechiness;
 	}
 	public double get_tempo() {
-		return name;
+		return tempo;
 	}
 
 	public static void main(String[] args) {
