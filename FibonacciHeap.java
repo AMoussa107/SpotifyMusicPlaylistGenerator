@@ -10,6 +10,7 @@ class Node {
     public Node right;
     public Node child;
     public boolean mark;
+    public String value;
 
     //constructor
     public Node() {
@@ -19,6 +20,7 @@ class Node {
         this.left = null;
         this.right = null;
         this.child = null;
+        this.value = "";
     }
     //alternative constructor
     public Node(int key_num) {
@@ -292,6 +294,12 @@ public class FibonacciHeap{
             parent.child.right = node;
 
         }
+
+    }
+    public Node delete(Node node) {
+        //decreaseKey(node, Integer.MIN_VALUE );
+        //return extractMin();
+        return null;
 
     }
     public void display1() {

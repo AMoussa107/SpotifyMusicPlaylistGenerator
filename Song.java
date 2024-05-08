@@ -19,7 +19,7 @@ public class Song{
 	private double speechiness;
 	private double tempo;
 
-	public Song(String id, String[] artist, String album, String name,   Integer popularity, Long duration, boolean explicit, double dance, double energy, double loudness, double speechiness, double accoustic, double instrumental, double liveness, double valence,  double tempo, String genre) {
+	public Song(String id, String[] artist, String album, String name, Integer popularity, Long duration, boolean explicit, double dance, double energy, double loudness, double speechiness, double accoustic, double instrumental, double liveness, double valence,  double tempo, String genre) {
 		this.id = id;
 		this.genre = genre;
 		this.name = name;
