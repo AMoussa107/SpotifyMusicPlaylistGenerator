@@ -50,12 +50,19 @@ public class SongHashMap {
 
     // Categorize by explicit
     categorizeAttribute(hashMap, "Explicit", String.valueOf(song.get_explicit()), song.get_id());
-}
-private static void categorizeAttribute(Map<String, Map<String, List<String>>> hashMap, String category, String attribute, String songId) {
-        hashMap.computeIfAbsent(category, k -> new HashMap<>())
-                .computeIfAbsent(attribute, k -> new ArrayList<>())
-                .add(songId);
-    }
+        }
+        private static void categorizeAttribute(Map<String, Map<String, List<String>>> hashMap, String category, String attribute, String songId) {
+                hashMap.computeIfAbsent(category, k -> new HashMap<>())
+                        .computeIfAbsent(attribute, k -> new ArrayList<>())
+                        .add(songId);
+        }
+
+        public static void main(String[] args) {
+                
+                
+        }
+
+
 
 }
     
