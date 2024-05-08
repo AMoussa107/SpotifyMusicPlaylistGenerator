@@ -10,7 +10,6 @@ class Node {
     public Node right;
     public Node child;
     public boolean mark;
-    public String value;
 
     //constructor
     public Node() {
@@ -20,7 +19,6 @@ class Node {
         this.left = null;
         this.right = null;
         this.child = null;
-        this.value = "";
     }
     //alternative constructor
     public Node(int key_num) {
@@ -296,12 +294,6 @@ public class FibonacciHeap{
         }
 
     }
-    public Node delete(Node node) {
-        //decreaseKey(node, Integer.MIN_VALUE );
-        //return extractMin();
-        return null;
-
-    }
     public void display1() {
         if (min == null) {
             System.out.println("The heap is empty.");
@@ -319,7 +311,52 @@ public class FibonacciHeap{
 
         System.out.println("The heap has " + size + " nodes.");
     }
+    //decrease a key of a node and update the heap as necessary
+    public void decreaseKey(Node node1, int key) {
+    if (k > node1.key) {
+        return; 
+    }
+    node1.key = key; 
+    Node node2 = node1.parent;
+    if (node2 != null && node1.key < node2.key) {
+        cut(node1, node2);
+        cascadingCut(node2);
+    }
 
+    if (node1.key < min.key) {
+        min = node1; // Update minimum if the decreased node is smaller
+    }
+}
+
+private void cut(Node node1, Node node2) {
+    removeChildFromList(node2, node1);
+    node2.degree--; // decrease the degree of the original parent node
+    mergeRootList(node1); //link the cut node to the root list
+    node1.parent = null;
+    node1.mark = false; 
+}
+
+private void cascadingCut(Node node2) {
+    Node node3 = node2.parent;
+    if (node3 != null) {
+        if (!node2.mark) {
+            node2.mark = true; //since there's a child now removed
+        } else {
+            cut(node2, node3);
+            cascadingCut(node3);
+        }
+    }
+}
+private void removeChildFromList(Node parent, Node node) {
+    if (parent.child == parent.child.right) {
+        parent.child = null;
+    } else if (parent.child == node) {
+        parent.child = node.right;
+        node.right.parent = parent;
+    }
+    node.left.right = node.right;
+    node.right.left = node.left;
+}
     private void printNode(Node node, int level) {
         for (int i = 0; i < level; i++) {
             System.out.print("  "); // Two spaces per level of depth
@@ -358,10 +395,7 @@ public class FibonacciHeap{
         heap.insert(0);
         System.out.println(heap.min.key);
         heap.consolidate();
-        heap.display1();
-    
-
-        
+        heap.display1(); 
 
     }
 }
