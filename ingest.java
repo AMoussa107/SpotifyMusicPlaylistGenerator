@@ -11,7 +11,7 @@ public void ingestCSV(String filePath) {
         if (scanner.hasNextLine()) {
             scanner.nextLine();
         }
-
+        SongHashMap songHashMap = new SongHashMap();
         while (scanner.hasNextLine()) {
             String line = scanner.nextLine();
             String[] attributes = line.split(",");
@@ -33,13 +33,19 @@ public void ingestCSV(String filePath) {
             double tempo = Double.parseDouble(attributes[18]);
             String genre = attributes[20];
             Song song = new Song(id, artists, album, name, popularity, duration, explicit, dance, energy, loudness, speechiness, accoustic, instrumental, liveness, valence, tempo, genre);
-
-        scanner.close();
+            songHashMap.categorizeSong(songHashMap.hashMap,song);
     } 
+        scanner.close();
     }   
     catch (FileNotFoundException e) {
         e.printStackTrace();
     }
+}
+public static void main (String[] args)
+{
+    String filePath = "MusicDataSet.csv";
+    ingest ingestInstance = new ingest();
+    ingestInstance.ingestCSV(filePath);
 }
 }
 
