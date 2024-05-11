@@ -1,3 +1,4 @@
+package music;
 import java.util.*;
 
 //create the node class
@@ -10,6 +11,7 @@ class Node {
     public Node right;
     public Node child;
     public boolean mark;
+    public String id;
 
     //constructor
     public Node() {
@@ -81,6 +83,7 @@ public class FibonacciHeap{
     private boolean trace;
     private Node found;
     private Node root_list;
+    public HashMap<String, Node> nodeHashMap;
 
     //setters and getters for instance variables
     public void set_trace(boolean t) {
@@ -100,6 +103,9 @@ public class FibonacciHeap{
         this.root_list = null;
         this.size = 0;
         this.trace = false;
+        //map songs to hashmap for easy access and update
+        nodeHashMap = new HashMap<>();
+
     }
     public boolean isEmpty() {
         return min == null;
@@ -115,6 +121,7 @@ public class FibonacciHeap{
         if (min == null || node.key < min.key) {
             min = node;
         }
+        nodeHashMap.put(node.id, node);
         size++;
     }
     
@@ -148,7 +155,7 @@ public class FibonacciHeap{
         }
     }
 
-    private FibonacciHeap union(FibonacciHeap newHeap) {
+    public FibonacciHeap union(FibonacciHeap newHeap) {
         //check if newHeap is empty
         if (newHeap == null || newHeap.root_list == null) {
             return this;
@@ -169,7 +176,7 @@ public class FibonacciHeap{
         this.root_list.left = lastNew;
 
         //find the min of current and new heap
-        if (this.min.key > newHeap.min.key) {
+        if (this.min == null || this.min.key > newHeap.min.key) {
             this.min = newHeap.min;
         }
         //adjust the union heap's size
@@ -282,6 +289,7 @@ public class FibonacciHeap{
     private void merge_to_child_list(Node parent, Node node) {
         if (parent.child == null) {
             parent.child = node;
+            //node.parent = parent;
             node.right = node;
             node.left = node;
         }
@@ -311,9 +319,22 @@ public class FibonacciHeap{
 
         System.out.println("The heap has " + size + " nodes.");
     }
+
+    //update a song score
+    public void updateScore(int nodeId, int newKey) {
+        Node node = this.nodeHashMap.get(nodeId);
+        if (node != null && newKey != node.key) {
+            if (newKey < node.key) {
+                decreaseKey(node, newKey);
+            }
+            else{
+                node.key = newKey;
+            }
+        }
+    }
     //decrease a key of a node and update the heap as necessary
     public void decreaseKey(Node node1, int key) {
-        if (k > node1.key) {
+        if (key > node1.key) {
             return; 
         }
         node1.key = key; 
@@ -385,6 +406,8 @@ public class FibonacciHeap{
         heap.insert(2);
         heap.insert(1);
         heap.insert(10);
+        System.out.println("First Heap");
+        heap.display();
         //Node node = heap.extractMin();
         //System.out.println(node.key);
         FibonacciHeap heap1 = new FibonacciHeap();
@@ -394,11 +417,17 @@ public class FibonacciHeap{
         heap1.insert(72);
         heap1.insert(19);
         heap1.insert(0);
+         System.out.println("Second Heap");
+        heap1.display();
         heap.union(heap1);
+         System.out.println("Merged Heap");
+        heap.display();
+         System.out.println("Extracted Minimum");
         heap.extractMin();
         heap.insert(0);
         System.out.println(heap.min.key);
         heap.consolidate();
+         System.out.println("Representation after Consolidation");
         heap.display1(); 
 
     }
