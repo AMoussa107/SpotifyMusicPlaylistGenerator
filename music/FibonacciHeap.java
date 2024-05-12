@@ -23,9 +23,10 @@ class Node {
         this.child = null;
     }
     //alternative constructor
-    public Node(int key_num) {
+    public Node(int key_num, String id) {
         this ();
         this.key = key_num;
+        this.id = id;
     }
 
     //setter and getter methods for all instance variables
@@ -111,8 +112,8 @@ public class FibonacciHeap{
         return min == null;
     }
     //insert new node in the heap   
-    public void insert(int key) {
-        Node node = new Node(key);
+    public void insert(int key, String id) {
+        Node node = new Node(key, id);
         node.left = node;
         node.right = node;
 
@@ -398,6 +399,7 @@ public class FibonacciHeap{
         }
     }
     public static void main(String[] args) {
+        /*
         FibonacciHeap heap = new FibonacciHeap();
         heap.insert(4);
         heap.insert(3);
@@ -429,6 +431,7 @@ public class FibonacciHeap{
         heap.consolidate();
          System.out.println("Representation after Consolidation");
         heap.display1(); 
+        */
 
     }
 }

@@ -6,8 +6,8 @@ public class Song{
 	private String name;
 	private String[] artist;
 	private String album;
-	private Integer popularity;
-	private Long duration;
+	private int popularity;
+	private double duration;
 	private boolean explicit;
 	private double dance;
 	private double energy;
@@ -18,8 +18,9 @@ public class Song{
 	private double valence; 
 	private double speechiness;
 	private double tempo;
+	protected int score;
 
-	public Song(String id, String[] artist, String album, String name, Integer popularity, Long duration, boolean explicit, double dance, double energy, double loudness, double speechiness, double accoustic, double instrumental, double liveness, double valence,  double tempo, String genre) {
+	public Song(String id, String[] artist, String album, String name, Integer popularity, double duration, boolean explicit, double dance, double energy, double loudness, double speechiness, double accoustic, double instrumental, double liveness, double valence,  double tempo, String genre) {
 		this.id = id;
 		this.genre = genre;
 		this.name = name;
@@ -35,6 +36,7 @@ public class Song{
 		this.valence = valence;
 		this.speechiness = speechiness;
 		this.tempo = tempo;
+		this.score = 0;
 }
 	public String get_name() {
 		return name;
@@ -54,7 +56,7 @@ public class Song{
 	public Integer get_popularity() {
 		return popularity;
 	}
-	public Long get_duration() {
+	public double get_duration() {
 		return duration;
 	}
 	public double get_energy()
