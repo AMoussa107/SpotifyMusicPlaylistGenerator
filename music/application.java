@@ -1,71 +1,71 @@
 package music;
 import java.util.*;
-public class Application{
-	private Ingest ingestInstance;
-	public Application(String filePath) {
-		ingestInstance = new Ingest(filePath);
+public class application{
+	private ingest ingestInstance;
+	public  application(String filePath) {
+		ingestInstance = new ingest(filePath);
 	}
 
 
 	public void score(Song song, String [] preferences, int[] priorities){
 		//genre
 		if (song.get_genre() == preferences[0]) {
-			song.score += 100 * (priorities[0]/100);
+			song.score -= 10000 * (priorities[0]/100);
 		}
 
 		else if (song.get_genre() == preferences[1]) {
-			song.score += 50 * priorities[0]/100;
+			song.score -= 5000 * priorities[0]/100;
 		}
 		else if (song.get_genre() == preferences[2]) {
-			song.score += 20 * priorities[0]/100;
+			song.score -= 2000 * priorities[0]/100;
 		}
 		//artist
 		for (String artist : song.get_artist()) {
 			if (artist == preferences[3]) {
-				song.score += 100 * priorities[1]/100;
+				song.score -= 10000 * priorities[1]/100;
 			}
 			else if (artist == preferences[4]) {
-				song.score += 50 * priorities[1]/100;
+				song.score -= 5000 * priorities[1]/100;
 			}
 			else if (artist == preferences[5]) {
-				song.score += 20 * priorities[1]/100;
+				song.score -= 2000 * priorities[1]/100;
 			}
 
 		}
 		//album
-		int popularity_score = (int) ((100-Math.abs(song.get_popularity() - Integer.parseInt(preferences[6])))*priorities[2]/100);
-		song.score += popularity_score; 
+		int popularity_score = (int) ((10000-100*(Math.abs(song.get_popularity() - Integer.parseInt(preferences[6]))))*priorities[2]/100);
+		song.score -= popularity_score; 
 		//duration
-		int duration_score = (int) ((100-Math.abs(song.get_duration() - Integer.parseInt(preferences[7])))*priorities[3]/100);
-		song.score += duration_score; 
+		int duration_score = (int) ((10000-100*(Math.abs(song.get_duration() - Integer.parseInt(preferences[7]))))*priorities[3]/100);
+		song.score -= duration_score; 
 		//explicity
 		if (song.get_explicit() == Boolean.parseBoolean(preferences[8])) {
-			song.score += 100 * priorities[4]/100; 
+			song.score -= 10000 * priorities[4]/100; 
 		}
 		//danceability 
-		int danceability_score = (int) ((100-Math.abs(song.get_dance() - Integer.parseInt(preferences[9])))*priorities[5]/100);
-		song.score += danceability_score; 
+		int danceability_score = (int) ((10000-100*(Math.abs(song.get_dance() - Integer.parseInt(preferences[9]))))*priorities[5]/100);
+		song.score -= danceability_score; 
 		//loudness
-		int loudness_score = (int) ((100-Math.abs(song.get_loudness() - Integer.parseInt(preferences[10])))*priorities[6]/100);
-		song.score += loudness_score;
+		int loudness_score = (int) ((10000-100*(Math.abs(song.get_loudness() - Integer.parseInt(preferences[10]))))*priorities[6]/100);
+		song.score -= loudness_score;
 		//acoustic
-		int acoustic_score = (int) ((100-Math.abs(song.get_acoustic() - Integer.parseInt(preferences[11])))*priorities[7]/100);
-		song.score += acoustic_score;  
+		int acoustic_score = (int) ((10000-100*(Math.abs(song.get_acoustic() - Integer.parseInt(preferences[11]))))*priorities[7]/100);
+		song.score -= acoustic_score;  
 		//instrumental
-		int instrumental_score =  (int) ((100-Math.abs(song.get_instrumental() - Integer.parseInt(preferences[12])))*priorities[8]/100);
-		song.score += instrumental_score;  
+		int instrumental_score =  (int) ((10000-100*(Math.abs(song.get_instrumental() - Integer.parseInt(preferences[12]))))*priorities[8]/100);
+		song.score -= instrumental_score;  
 		//valence
-		int valence_score = (int) ((100-Math.abs(song.get_valence() - Integer.parseInt(preferences[13])))*priorities[9]/100);
-		song.score += valence_score;
+		int valence_score = (int) ((10000-100*(Math.abs(song.get_valence() - Integer.parseInt(preferences[13]))))*priorities[9]/100);
+		song.score -= valence_score;
 		//tempo
-		int tempo_score = (int) ((100-Math.abs(song.get_tempo() - Integer.parseInt(preferences[14])))*priorities[10]/100);
-		song.score += tempo_score;
+		int tempo_score = (int) ((10000-100*(Math.abs(song.get_tempo() - Integer.parseInt(preferences[14]))))*priorities[10]/100);
+		song.score -= tempo_score;
 		//energy
-		int energy_score = (int) ((100-Math.abs(song.get_energy() - Integer.parseInt(preferences[15])))*priorities[11]/100);
-		song.score += energy_score;
+		int energy_score = (int) ((10000-100*(Math.abs(song.get_energy() - Integer.parseInt(preferences[15]))))*priorities[11]/100);
+		song.score -= energy_score;
 		//liveness
-		int liveness_score = (int) ((100-Math.abs(song.get_liveness() - Integer.parseInt(preferences[16])))*priorities[12]/100);
-		song.score += energy_score;
+		int liveness_score = (int) ((10000-100*(Math.abs(song.get_liveness() - Integer.parseInt(preferences[16]))))*priorities[12]/100);
+		song.score -= energy_score;
 	}
 
 public String[] getUserPreferences()
@@ -132,7 +132,8 @@ public int[] getUSerPriorities()
 
 }
 public static void main(String[] args) {
-	Application application = new Application("toyMusicDataSet.csv");
-		
+	application application = new application("MusicDataSet.csv");
+
+	
 }
 }

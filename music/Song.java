@@ -36,7 +36,7 @@ public class Song{
 		this.valence = valence;
 		this.speechiness = speechiness;
 		this.tempo = tempo;
-		this.score = 0;
+		this.score = Integer.MAX_VALUE;
 }
 	public String get_name() {
 		return name;

@@ -4,13 +4,13 @@ import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class Ingest {
+public class ingest {
     private SongHashMap songHashMap;
     public FibonacciHeap heap = new FibonacciHeap();
     private int[] priorities;
     private String[] preferences;
 
-    public Ingest(String filePath) {
+    public ingest(String filePath) {
         songHashMap = new SongHashMap(); // Initialize the class field instead of a local variable
         preferences = getUserPreferences();
         priorities = getUSerPriorities();
@@ -51,7 +51,7 @@ public class Ingest {
 
                     Song song = new Song(id, artists, album, name,  popularity, duration, explicit, dance, energy, loudness, speechiness, accoustic, instrumental, liveness, valence, tempo, genre);
                     songHashMap.categorizeSong(songHashMap.hashMap, song);
-                    score(song, preferences, priorities);
+                    song.score = score(song, preferences, priorities);
 
                     heap.insert(song.score, song.get_id());
 
@@ -64,65 +64,68 @@ public class Ingest {
             System.out.println("File not found: " + e.getMessage());
         }
     }
-    public void score(Song song, String [] preferences, int[] priorities){
+    public int score(Song song, String [] preferences, int[] priorities){
         //genre
-        if (song.get_genre() == preferences[0]) {
-            song.score += 100 * (priorities[0]/100);
+        int finalScore= Integer.MAX_VALUE;
+        if (song.get_genre().equals(preferences[0])) {
+            finalScore -= 100 * (priorities[0]/100);
         }
 
-        else if (song.get_genre() == preferences[1]) {
-            song.score += 50 * priorities[0]/100;
+        else if (song.get_genre().equals(preferences[1])) {
+            finalScore-= 50 * priorities[0]/100;
         }
-        else if (song.get_genre() == preferences[2]) {
-            song.score += 20 * priorities[0]/100;
+        else if (song.get_genre().equals(preferences[2])) {
+            finalScore -= 20 * priorities[0]/100;
         }
         //artist
         for (String artist : song.get_artist()) {
-            if (artist == preferences[3]) {
-                song.score += 100 * priorities[1]/100;
+            if (artist.equals(preferences[3])) {
+                finalScore -= 100 * priorities[1]/100;
             }
-            else if (artist == preferences[4]) {
-                song.score += 50 * priorities[1]/100;
+            else if (artist.equals(preferences[4])) {
+                finalScore -= 50 * priorities[1]/100;
             }
-            else if (artist == preferences[5]) {
-                song.score += 20 * priorities[1]/100;
+            else if (artist.equals(preferences[5])) {
+                finalScore -= 20 * priorities[1]/100;
             }
 
         }
         //album
         int popularity_score = (int) ((100-Math.abs(song.get_popularity() - Integer.parseInt(preferences[6])))*priorities[2]/100);
-        song.score += popularity_score; 
+        finalScore -= popularity_score; 
         //duration
         int duration_score = (int) ((100-Math.abs(song.get_duration() - Integer.parseInt(preferences[7])))*priorities[3]/100);
-        song.score += duration_score; 
+        finalScore -= duration_score; 
         //explicity
         if (song.get_explicit() == Boolean.parseBoolean(preferences[8])) {
-            song.score += 100 * priorities[4]/100; 
+            finalScore -= 100 * priorities[4]/100; 
         }
         //danceability 
         int danceability_score = (int) ((100-Math.abs(song.get_dance() - Integer.parseInt(preferences[9])))*priorities[5]/100);
-        song.score += danceability_score; 
+        finalScore -= danceability_score; 
         //loudness
         int loudness_score = (int) ((100-Math.abs(song.get_loudness() - Integer.parseInt(preferences[10])))*priorities[6]/100);
-        song.score += loudness_score;
+        finalScore -= loudness_score;
         //acoustic
         int acoustic_score = (int) ((100-Math.abs(song.get_acoustic() - Integer.parseInt(preferences[11])))*priorities[7]/100);
-        song.score += acoustic_score;  
+        finalScore -= acoustic_score;  
         //instrumental
         int instrumental_score =  (int) ((100-Math.abs(song.get_instrumental() - Integer.parseInt(preferences[12])))*priorities[8]/100);
-        song.score += instrumental_score;  
+        finalScore -= instrumental_score;  
         //valence
         int valence_score = (int) ((100-Math.abs(song.get_valence() - Integer.parseInt(preferences[13])))*priorities[9]/100);
-        song.score += valence_score;
+        finalScore -= valence_score;
         //tempo
         int tempo_score = (int) ((100-Math.abs(song.get_tempo() - Integer.parseInt(preferences[14])))*priorities[10]/100);
-        song.score += tempo_score;
+        finalScore -= tempo_score;
         //energy
         int energy_score = (int) ((100-Math.abs(song.get_energy() - Integer.parseInt(preferences[15])))*priorities[11]/100);
-        song.score += energy_score;
+        finalScore -= energy_score;
         //liveness
         int liveness_score = (int) ((100-Math.abs(song.get_liveness() - Integer.parseInt(preferences[16])))*priorities[12]/100);
-        song.score += energy_score;
+        finalScore -= energy_score;
+
+        return finalScore;
     }
 
     public String[] getUserPreferences()
@@ -189,10 +192,14 @@ public class Ingest {
 
     }
     public static void main(String[] args) {
-        String filePath = "toyMusicDataSet.csv";
-        Ingest ingestInstance = new Ingest(filePath);
-        String ids = ingestInstance.heap.extractMin().id;
+        String filePath = "MusicDataSet.csv";
+        ingest ingestInstance = new ingest(filePath);
+        for (int i=0; i<10; i++)
+        {
+            String ids = ingestInstance.heap.extractMin().id;
         System.out.println(ids);
+        }
+        
 
 
     }
