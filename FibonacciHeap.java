@@ -10,7 +10,7 @@ class Node {
     public Node right;
     public Node child;
     public boolean mark;
-    public String value;
+    public String id;
 
     //constructor
     public Node() {
@@ -20,12 +20,13 @@ class Node {
         this.left = null;
         this.right = null;
         this.child = null;
-        this.value = "";
+        this.id = "";
+
     }
     //alternative constructor
-    public Node(int key_num) {
+    public Node(String id, int key) {
         this ();
-        this.key = key_num;
+        this.key = key;
     }
 
     //setter and getter methods for all instance variables
@@ -83,6 +84,7 @@ public class FibonacciHeap{
     private boolean trace;
     private Node found;
     private Node root_list;
+    public HashMap<Integer, Node> nodeHashMap;
 
     //setters and getters for instance variables
     public void set_trace(boolean t) {
@@ -102,13 +104,15 @@ public class FibonacciHeap{
         this.root_list = null;
         this.size = 0;
         this.trace = false;
+        nodeHashMap = new HashMap<>();
+
     }
     public boolean isEmpty() {
         return min == null;
     }
     //insert new node in the heap   
-    public void insert(int key) {
-        Node node = new Node(key);
+    public void insert(String id, int key) {
+        Node node = new Node(id, key);
         node.left = node;
         node.right = node;
 
@@ -117,6 +121,7 @@ public class FibonacciHeap{
         if (min == null || node.key < min.key) {
             min = node;
         }
+        nodeHashMap.put(node.id, node);
         size++;
     }
     
