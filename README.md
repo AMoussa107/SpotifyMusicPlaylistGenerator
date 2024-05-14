@@ -49,7 +49,7 @@ This interface was implemented using the Javax.swing and Java.awt packages used 
 <img width="798" alt="Screenshot 2024-05-14 at 2 24 49 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/922e43c1-aeaa-426d-8e4e-9b984071be0f">
 
 ## Data Set:
-For playlist generation, we use a data set of about 114,000 spotify tracks that has each song with its attributes ingested from MusicDataSet.csv. Each track has a Spotify id attributes that are separated by commas. The first three lines in the data set look like this: 
+For playlist generation, we use a data set of about 114,000 spotify tracks that has each song with its attributes ingested from `MusicDataSet.csv` . Each track has a Spotify id attributes that are separated by commas. The first three lines in the data set look like this: 
 
 ```
 0,5SuOikwiRyPMVoIQDJUgSV,Gen Hoshino,Comedy,Comedy,73,3.844431796,FALSE,67.6,46.1,1,13.492,0,14.3,3.22,0.000101,35.8,71.5,36.03155738,4,acoustic
@@ -64,7 +64,7 @@ Here's a breakdown of what the used attributes in our application mean:
 | Attribute | Definition | 
 |----|----------|
 |track_id| The Spotify ID for the track |
-|artists|The list of artists' names who performed the track. If there is more than one artist, they are separated by a ';'|
+|artists|The list of artists' names who performed the track. If there is more than one artist, they are separated by a `;`|
 |track_name|Name of the track|
 |popularity|The popularity of a track is a value between 0 and 100, with 100 being the most popular|
 |duration_mins|The track's duration in minutes|
@@ -81,10 +81,10 @@ Here's a breakdown of what the used attributes in our application mean:
 |track_genre|The genre in which the track belongs out of more than 125 genres list|
 
 ## Usage:
-To use this program, clone this github repository to your local machine. Before you compile and run this program, make sure you are in the same directory this `README.md` lives in on your terminal. To check, run `pwd` on the Terminal. You should see something like (although not the same as)
+To use this program, clone this github repository to your local machine. Before you compile and run this program, make sure you are in the same directory this `README.md` lives in on your terminal. To check, run `pwd` on the Terminal. You should see something like
 
 ```
-/SpotifyPlaylistGenerator/
+Users/williams/cs136/SpotifyPlaylistGenerator/
 ``` 
 
 First, make a bin directory where Java will store and read the .class files.
