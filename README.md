@@ -35,8 +35,13 @@ The Fibonacci Heap structure does a great job of minimizing the complexity of th
 | union  | O(1) | O(n)|
 | extractMin  |O(log(n)| O(log(n))|
 | decreaseKey | O(1) | O(log(n))|
-|delete|O(log(n)) | O(log(n)|
+|delete|O(log(n)) | O(log(n))|
 
 
 
-## Data
+## Application
+We are making use of a priority queue ADT (implemented with the Fibonacci Heap) to generate (queue) songs from our data set into a playlist. The key of each song node that's being added to the heap is determined through input from the user of their preferences and then scoring each song based on how well its attributes match the user preferred attributes. The input from the user is taken through a graphical interface with sliders, drop down menus, checkboxes, and textboxes, and then after submitting their preferences, we extract the first n minimum values from the heap where n is the number of songs the user wants in the playlist. This is how the interface looks like: 
+<img width="796" alt="Screenshot 2024-05-14 at 1 35 25 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/57a48f31-4082-4bc5-995a-0b0ce1bd24cb">
+
+
+
