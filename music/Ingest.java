@@ -4,13 +4,16 @@ import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
+// Ingest the data from the Spotify dataset creates individual Song objects 
+// and inserts all the songs into a Fibonacci Heap
 public class Ingest {
     private SongHashMap songHashMap;
     public FibonacciHeap heap = new FibonacciHeap();
     public int[] priorities;
     public String[] preferences;
-    int dummy = 10000;
 
+    // Ingest the data from the Spotify dataset creates individual Song objects 
+    // and inserts all the songs into a Fibonacci Heap
     public Ingest(String filePath, String[] preferences, int[] priorities) {
         songHashMap = new SongHashMap(); // Initialize the class field instead of a local variable
         //preferences = getUserPreferences();
@@ -32,6 +35,7 @@ public class Ingest {
                 }
 
                 try {
+                    // For each song, get all song attributes
                     String id = attributes[1];
                     String[] artists = attributes[2].split(";");
                     String album = attributes[3];
@@ -50,14 +54,17 @@ public class Ingest {
                     double tempo = Double.parseDouble(attributes[18]);
                     String genre = attributes[20];
 
+                    // Create song objects for each song
                     Song song = new Song(id, artists, album, name,  popularity, duration, explicit, dance, energy, loudness, speechiness, accoustic, instrumental, liveness, valence, tempo, genre);
-                    songHashMap.categorizeSong(songHashMap.hashMap, song);
+
+                    // Use score method to calculate a score for each song
                     song.score = score(song, preferences, priorities);
 
+                    // Insert songs with calculated scores into the heap
                     heap.insert(song.score, song, song.get_id());
 
 
-                } catch (NumberFormatException e) {
+                } catch (NumberFormatException e) { // Check if there is faulty data entries in the dataset
                     System.out.println("Error parsing number from file: " + e.getMessage());
                 }
             }
@@ -66,20 +73,26 @@ public class Ingest {
             System.out.println("File not found: " + e.getMessage());
         }
     }
+
+    // Calculate score for a given song based on preferences and priorities
     public int score(Song song, String [] preferences, int[] priorities) {
-        //genre
+        // Set the intial score to the maximum possible valaue
         int finalScore= Integer.MAX_VALUE;
+        // Decrease the score calculated based on preferences from the 
+        // intial max score so that the higher ranked songs would have
+        // a lower final score
+
+        // Genre Score
         if (song.get_genre().equals(preferences[0])) {
             finalScore -= 100 * (priorities[0]/100);
         }
-
         else if (song.get_genre().equals(preferences[1])) {
             finalScore-= 50 * priorities[0]/100;
         }
         else if (song.get_genre().equals(preferences[2])) {
             finalScore -= 20 * priorities[0]/100;
         }
-        //artist
+        // Artist Score
         for (String artist : song.get_artist()) {
             if (artist.equals(preferences[3])) {
                 finalScore -= 100 * priorities[1]/100;
@@ -93,7 +106,7 @@ public class Ingest {
 
         }
       
-        //album
+        // popularity Score 
         int popularity_score = (int) ((100-Math.abs(song.get_popularity() - Integer.parseInt(preferences[6])))*priorities[2]/100);
         finalScore -= popularity_score; 
         //duration
@@ -103,34 +116,44 @@ public class Ingest {
         if (song.get_explicit() == Boolean.parseBoolean(preferences[8])) {
             finalScore -= 100 * priorities[4]/100; 
         }
-        //danceability 
+
+        //danceability Score
         int danceability_score = (int) ((100-Math.abs(song.get_dance() - Integer.parseInt(preferences[9])))*priorities[5]/100);
         finalScore -= danceability_score; 
-        //loudness
+
+        //loudness Score
         int loudness_score = (int) ((100-Math.abs(song.get_loudness() - Integer.parseInt(preferences[10])))*priorities[6]/100);
         finalScore -= loudness_score;
-        //acoustic
+
+        //acoustic Score
         int acoustic_score = (int) ((100-Math.abs(song.get_acoustic() - Integer.parseInt(preferences[11])))*priorities[7]/100);
         finalScore -= acoustic_score;  
-        //instrumental
+
+        //instrumental Score
         int instrumental_score =  (int) ((100-Math.abs(song.get_instrumental() - Integer.parseInt(preferences[12])))*priorities[8]/100);
         finalScore -= instrumental_score;  
-        //valence
+
+        //valence Score
         int valence_score = (int) ((100-Math.abs(song.get_valence() - Integer.parseInt(preferences[13])))*priorities[9]/100);
         finalScore -= valence_score;
-        //tempo
+
+        //tempo Score
         int tempo_score = (int) ((100-Math.abs(song.get_tempo() - Integer.parseInt(preferences[14])))*priorities[10]/100);
         finalScore -= tempo_score;
-        //energy
+
+        //energy Score
         int energy_score = (int) ((100-Math.abs(song.get_energy() - Integer.parseInt(preferences[15])))*priorities[11]/100);
         finalScore -= energy_score;
-        //liveness
+
+        //liveness Score
         int liveness_score = (int) ((100-Math.abs(song.get_liveness() - Integer.parseInt(preferences[16])))*priorities[12]/100);
         finalScore -= energy_score;
 
         return finalScore;
     }
 
+    // Updates scores for all the songs in the heap baed on the updated 
+    // preferences and priorities 
     public void updateAllScore() {
         for (Node node : this.heap.nodeHashMap.values()) {
             Song song = node.get_song();
@@ -138,8 +161,9 @@ public class Ingest {
             heap.updateScore(song.get_id(), newScore);
         }
     }
-    public String[] getUserPreferences()
-    {
+
+    // Gets preferences from terminal 
+    public String[] getUserPreferences() {
         String[] str = new String[17];
         Scanner scanner = new Scanner(System.in); 
         System.out.println("What are your top 3 genres?");
@@ -175,10 +199,10 @@ public class Ingest {
 
 
     return str;
-
     }
-    public int[] getUSerPriorities()
-    {
+
+    // Gets prioroties from terminal 
+    public int[] getUSerPriorities() {
         int[] arr = new int[13];
         int sum = 100;
         System.out.println("You've got a 100 points on how important each song attribute is in genarating your playlist. Enter 14 numbers in the same order of the questions above for how many points you want to allocate to each attribute. Press Enter in between numbers");
@@ -201,22 +225,45 @@ public class Ingest {
         return arr;
 
     }
+
+    // Returns a playlist of songs based on song scores
     public String[] playlist(int n) {
         String[] arr = new String[n];
         Node[] arr1 = new Node[n];
-        for (int i=0; i<n; i++) {
+        // Track played songs using a set
+        Set<String> playedSongs = new HashSet<>();
+
+        for (int i = 0; i < n; i++) {
+            // Break if heap is empty
+            if (this.heap.isEmpty()) {
+                break;  
+            }
             Node node = this.heap.extractMin();
-            arr1 [i] = node;
-            Song songs = node.get_song();
-            String artist = Arrays.toString(songs.get_artist());
-            String title = songs.get_name();
+            Song song = node.get_song();
+            String songId = song.get_id();
+
+            if (playedSongs.contains(songId)) {
+                i--;  // Go back to the same node and retry with the next node
+                continue;  // Continue extracting
+            }
+            // Mark the song as played
+            playedSongs.add(songId);  
+            arr1[i] = node;
+            String artist = Arrays.toString(song.get_artist());
+            String title = song.get_name();
             arr[i] = title + " by " + artist;
         }
+
+        // Reinsert extracted nodes back into the heap
         for (Node node : arr1) {
-            this.heap.insert(node.get_key(), node.get_song(), node.get_Id());
+            if (node != null) {
+                this.heap.insert(node.get_key(), node.get_song(), node.get_Id());  
+            }
         }
+        // Return the playlist
         return arr;
     }
+
     public static void main(String[] args) {
         //String filePath = "MusicDataSet.csv";
         //ingest ingestInstance = new ingest(filePath);

@@ -1,8 +1,7 @@
 package music;
 import java.util.*;
 
-//create the node class
-
+//Create the node class
 class Node {
     public int key;
     public int degree;
@@ -14,24 +13,24 @@ class Node {
     public String id;
     public Song song;
 
-    //constructor
-    public Node() {
-        this.key = Integer.MAX_VALUE;
+    //Node Constructor
+    public Node(int key) {
+        this.key = key;
         this.degree = 0;
         this.parent = null;
         this.left = null;
         this.right = null;
         this.child = null;
     }
-    //alternative constructor
+    //Alternative constructor for playlist application
     public Node(int key_num, Song song, String id) {
-        this ();
+        this (key_num);
         this.key = key_num;
         this.id = id;
         this.song = song;
     }
 
-    //setter and getter methods for all instance variables
+    //Setter and getter methods for Node instance variables
     public Song get_song() {
         return this.song;
     }
@@ -81,65 +80,89 @@ class Node {
     public boolean get_mark() {
         return this.mark;
     }
- 
 
 }
 
 public class FibonacciHeap{
     //instance variables
-    private int size;
-    private Node min;
-    private boolean trace;
-    private Node found;
-    private Node root_list;
-    public HashMap<String, Node> nodeHashMap;
+    private int size; //Number of nodes in the heap
+    private Node min; //The node with minimum key
+    private boolean trace; //For debugging purposes
+    private Node root_list; //the linked list of root nodes
+    //Additional data structure: HashMap
+    public HashMap<String, Node> nodeHashMap; //Map nodes to song id for quick access
 
-    //setters and getters for instance variables
+    //Setter for trace
     public void set_trace(boolean t) {
         this.trace = t;
     }
+    //Getter for tace
     public boolean get_trace() {
         return this.trace;
     }
 
-    //create new fibonacci heap
-    public static FibonacciHeap new_heap() {
-        return new FibonacciHeap();
-    }
-    //constructor method
+    //Constructor method
     public FibonacciHeap() {
-        this.min = null;
-        this.root_list = null;
         this.size = 0;
+        this.min = null;
         this.trace = false;
-        //map songs to hashmap for easy access and update
+        this.root_list = null;
         nodeHashMap = new HashMap<>();
 
     }
+    //Check if the heap is empty
+    //Returns true if the heap is empty
     public boolean isEmpty() {
         return min == null;
     }
-    //insert new node in the heap   
+    //Inserts a new node with the given key into the heap
+    public void insert(int key) {
+        //Create new node keeping with circular link property
+        Node node = new Node(key);
+        node.left = node;
+        node.right = node;
+
+        //Merge the node into the root list
+        mergeRootList(node);
+
+        //Update the minimum if new node has a smaller key
+        if (min == null || node.key < min.key) {
+            min = node;
+        }
+        //Map the node to node id for easy access
+        nodeHashMap.put(node.id, node);
+        //Update size
+        size++;
+    }
+    //Alternative insert method for the playlist application
     public void insert(int key, Song song, String id) {
         Node node = new Node(key, song, id);
         node.left = node;
         node.right = node;
 
+        //Merge the node into the root list
         mergeRootList(node);
 
+        //Update the minimum if new node has a smaller key
         if (min == null || node.key < min.key) {
             min = node;
         }
+        //Map the node to node id for easy access
         nodeHashMap.put(node.id, node);
+        //Update size
         size++;
     }
-    
+    //Helper method for insert
+    //Adds the new node to the root list
+    //maintaining the circular doubly link property
     public void mergeRootList(Node node) {
+        //Check if the root list is empty
         if (root_list == null) {
             this.root_list = node;
             node.right = node;
             node.left = node;
         }
+        //If not empty, add the node the circular root list
         else {
             node.right = this.root_list;
             node.left = this.root_list.left;
@@ -147,24 +170,8 @@ public class FibonacciHeap{
             this.root_list.left = node;
         }
     }
-    public void display() {
-        if (min == null) {
-            System.out.println("The heap is empty.");
-        } else {
-            System.out.println("The root nodes of Heap are:");
-            Node temp = min;
-            do {
-                System.out.print(temp.key + " ");
-                temp = temp.right;
-                if (temp != min) {
-                    System.out.print("--> ");
-                }
-            } while (temp != min);
-            System.out.println("\nThe heap has " + size + " nodes.");
-        }
-    }
-
-    public FibonacciHeap union(FibonacciHeap newHeap) {
+    // Merges the heap to a another Fibonnaci heap
+    public FibonacciHeap merge(FibonacciHeap newHeap) {
         //check if newHeap is empty
         if (newHeap == null || newHeap.root_list == null) {
             return this;
@@ -188,209 +195,278 @@ public class FibonacciHeap{
         if (this.min == null || this.min.key > newHeap.min.key) {
             this.min = newHeap.min;
         }
-        //adjust the union heap's size
+        //adjust the merged heap's size
         this.size += newHeap.size;
         //return the united heap
         return this;
     }
-
+    //Find and return the node with smallest key
     public Node extractMin() {
         Node node = this.min;
+        //Check if the heap is empty
+        //If not empty retrieve all children of min
+        //and add them to the root list
         if (node != null) {
+            //Check if the min node has children
             if (node.child != null) {
+                //Get all children of the min node
                 ArrayList<Node> children = iterate(node.child);
+                //Insert all the child nodes into the root list
                 for (Node ch : children) {
                     mergeRootList(ch);
+                    //Remove the each child's link to parent
                     ch.parent = null;
                 }
             }
+            //Remove the min node from the root list
             remove_from_rootList(node);
-            //check if min was the only root node in the list
+            //Check if min was the only root node in the list
             if (node == node.right) {
                 this.min = null;
                 this.root_list = null;
             }
+            //Update the min and the heap structure
             else {
-                //temoporarily set min to the next node
+                //Temoporarily set min to the next node
                 this.min = node.right;
-                //rearrange the heap
-                //make sure no two roots have the same degree
-                //find and assign the new min
+                //Rearrange the heap
+                //Make sure no two roots have the same degree
+                //Find and assign the new min
                 consolidate();
             }
+            //Decrement the heap's size
             this.size--;
         }
+        //Return the retreived min node
         return node;
     }
-    private ArrayList<Node> iterate(Node first) {
+    //Returns an Arraylist of the children of a given node
+    private ArrayList<Node> iterate(Node node) {
         ArrayList<Node> nodeList = new ArrayList<Node>();
-        Node check = first;
-        Node stop = first;
-        boolean flag = false;
-
+        //Set the current and target stop node to the given node
+        Node current = node;
+        Node stop = node;
+        //Marker to check if iteration has started
+        boolean loopMark = false;
+        //Iterate all children of the given node
         while (true) {
-            if (check == stop && flag) {
+            //Break if one full loop is  completed
+            if (current == stop && loopMark) {
                 break;
             }
-            else if (check == stop) {
-                flag = true;
+            //Mark that iteration has started
+            else if (current == stop) {
+                loopMark = true;
             }
-            nodeList.add(check);
-            check = check.right;
+            //Add the node to the arraylist
+            //Move to the next node
+            nodeList.add(current);
+            current = current.right;
         }
+        //return the arraylist of children
         return nodeList;
     }
+    //Ensure that no two roots have teh same degree
+    //Finds and updates minimum node
     private void consolidate() {
-        //int num = (int) Math.ceil(Math.log(this.size)/Math.log(2) * 2);
+        //the potential maximum degree of the heap based on Fibonacci sequence
         int num = (int) Math.ceil(Math.log(this.size) / Math.log(2));
         Node[] arr = new Node[num];
         
+        //Get all the nodes in the rootlist
         ArrayList<Node> nodes = iterate(this.root_list);
+        //Check if there are two root nodes with same degree
         for (int i = 0; i < nodes.size(); i++) {
             Node node1 = nodes.get(i);
             int deg = node1.degree;
+
+            //If two nodes have the same degreee attach the node with bigger
+            //key to the children list of the node with smaller key
             while (arr[deg] != null) {
+                //Get the node with the same degree
                 Node node2 = arr[deg];
+                //Check if the node with the same degree has smaller key
                 if (node1.key > node2.key) {
                     Node temp = node1;
                     node1 = node2;
                     node2 = temp;
                 }
+                //Insert the node with bigger key to the children of 
+                //the node with smaller key
                 heap_link(node2, node1);
                 arr[deg] = null;
+                //Update the degree of the node with smaller key
                 deg++;
             }
+            //If the degree does not match any of the iterated nodes 
+            //map the node to its degree
             arr[deg] = node1;
         }
         //Temporarily reset min until finding new min
         min = null;
-        for (int j = 0; j < num; j++) {
-            if (arr[j] != null) {
-                if (min == null || arr[j].key < this.min.key) {
-                    this.min = arr[j];  
+        //Find the new minimum
+        for (Node node : arr) {
+            if (node != null) {
+                if (min == null || node.key < this.min.key) {
+                    this.min = node;  
                 }
             }
         }
-
     }
+
+    // Helper method to link one root node to the 
+    // children of the other
     private void heap_link(Node node1, Node node2) {
+        // Remove the first noe from the root list
+        // Remove its circular links
         this.remove_from_rootList(node1);
         node1.left = node1;
         node1.right = node1;
+        // Link the removed node to the children
+        // of the second node
         merge_to_child_list(node2, node1);
+        // Update the degree of the second node
         ++node2.degree;
+        // Assign the second as the parent of the first
         node1.parent = node2;
+        // Mark that the first flag has not lost a child
+        // ever since it was made a child of the second
         node1.mark = false;
     }
+
+    //Remove a node from the heap root list
     private void remove_from_rootList(Node node) {
+        // Check if the node is the first in the rootlist
         if (node == this.root_list) {
+            // Move the root list pointer to the next node
             this.root_list = node.right;
         }
-        //check if node is the only node
+        // Check if node is the only node in the root list
         if (node == node.right) {
+            //Set the root list to empty
             this.root_list = null;
         }
+        // Remove the node's links from other nodes in the lsit
         node.left.right = node.right;
         node.right.left = node.left;
 
     }
-    //merge a node to the child list of another node
+    //Merge a node to the child list of another node
     private void merge_to_child_list(Node parent, Node node) {
+        // If the parent node is empty, assign the new node as its child
         if (parent.child == null) {
             parent.child = node;
-            //node.parent = parent;
+            node.parent = parent;
+            // Remove the new node's link from its left and right nodes
             node.right = node;
             node.left = node;
         }
+        // If the parent node has children, link the new node
+        // to its children maintaing the circualr double links
         else {
             node.right = parent.child.right;
             node.left = parent.child;
             parent.child.right.left = node;
             parent.child.right = node;
-
-        }
-
-    }
-    public void display1() {
-        if (min == null) {
-            System.out.println("The heap is empty.");
-            return;
-        }
-
-        System.out.println("The root nodes of the heap:");
-        Node start = min;
-        Node current = start;
-
-        do {
-            printNode(current, 0);
-            current = current.right;
-        } while (current != start);
-
-        System.out.println("The heap has " + size + " nodes.");
-    }
-
-    //update a song score
-    public void updateScore(String nodeId, int newKey) {
-        Node node = this.nodeHashMap.get(nodeId);
-        if (node != null && newKey != node.key) {
-            if (newKey < node.key) {
-                decreaseKey(node, newKey);
-            }
-            else{
-                node.key = newKey;
-            }
         }
     }
-    //decrease a key of a node and update the heap as necessary
+
+    //Decrease the key of a node and update the heap as necessary
     public void decreaseKey(Node node1, int key) {
+        // New key must be smaller than current key
+        // Check if new key is smaller
         if (key > node1.key) {
+            // Do nothing if new key is greater 
             return; 
         }
+        // Update the key
         node1.key = key; 
+        // 
         Node node2 = node1.parent;
+        // If the node's key is smaller than its parent now
+        // Update the heap using cut and cascading cut
         if (node2 != null && node1.key < node2.key) {
             cut(node1, node2);
             cascadingCut(node2);
         }
-
+        // If the new key is maller than the minimum key
+        // update the min
         if (node1.key < min.key) {
             min = node1; // Update minimum if the decreased node is smaller
         }
     }
-
-    private void cut(Node node1, Node node2) {
-        removeChildFromList(node2, node1);
-        node2.degree--; // decrease the degree of the original parent node
-        mergeRootList(node1); //link the cut node to the root list
-        node1.parent = null;
-        node1.mark = false; 
+    // Cuts a node from its parent and adds it to the root list
+    private void cut(Node child, Node parent) {
+        // Remove node from parent
+        removeChildFromList(parent, child);
+        parent.degree--; // Decrease the degree of the original parent node
+        // Link the cut node to the root list
+        mergeRootList(child); 
+        child.parent = null;
+        child.mark = false; 
     }
 
+    // Removes child nodes from their parent nodes and
+    // adds them to the root list
     private void cascadingCut(Node node2) {
         Node node3 = node2.parent;
+        // Check if node2 is not a root node (in root list)
         if (node3 != null) {
             if (!node2.mark) {
-                node2.mark = true; //since there's a child now removed
+                node2.mark = true; // Since node2 has lost a child now
             } else {
+                // Recursively cut nodes until a root node is reached 
                 cut(node2, node3);
                 cascadingCut(node3);
             }
         }
     }
+
+    // Removes a node from its parent's child list
     private void removeChildFromList(Node parent, Node node) {
+        // If node is the only child, then set parent's child to null
         if (parent.child == parent.child.right) {
             parent.child = null;
-        } else if (parent.child == node) {
+        } 
+        // If node is the first child, move the child pointer to the next node
+        else if (parent.child == node) {
             parent.child = node.right;
             node.right.parent = parent;
         }
+        // Remove the node from the lsit by removing its links from the nodes in list
         node.left.right = node.right;
         node.right.left = node.left;
     }
-       public Node delete(Node node) {
-            decreaseKey(node, Integer.MIN_VALUE );
-            return extractMin();
+
+    // Deletes a node from the heap 
+    public Node delete(Node node) {
+        // Decrease the key of the ndoe to smallest possible number
+        // making it the new minimum
+        decreaseKey(node, Integer.MIN_VALUE );
+        // Extract the node as the minimum
+        return extractMin();
+    }
+
+    // Update a node key
+    public void updateScore(String nodeId, int newKey) {
+        Node node = this.nodeHashMap.get(nodeId);
+        // Decrease key if the new key is smaller than the current key
+        // Check if the node and new score are valid
+        if (node != null && newKey != node.key) {
+            if (newKey < node.key) {
+                decreaseKey(node, newKey);
+            }
+            // Update score if node is greater the key
+            else if (newKey > node.key) {
+                node.key = newKey;
+                delete(node);
+                insert(node.get_key(), node.get_song(), node.get_Id());
+
+            }
         }
+    }
+
+    // Prints a node and its children based on a give depth
     private void printNode(Node node, int level) {
         for (int i = 0; i < level; i++) {
             System.out.print("  "); // Two spaces per level of depth
@@ -406,9 +482,48 @@ public class FibonacciHeap{
             } while (child != childStart);
         }
     }
+
+    
+
+    // Debugging method to display the heap in detail.
+    public void display1() {
+        if (min == null) {
+            System.out.println("The heap is empty.");
+            return;
+        }
+
+        System.out.println("The root nodes of the heap:");
+        Node start = min; // Start from the minimum node.
+        Node current = start;
+
+        do {
+            printNode(current, 0); // Print each node and its children recursively.
+            current = current.right; // Move to the next node.
+        } while (current != start);
+
+        System.out.println("The heap has " + size + " nodes."); // Print the total number of nodes.
+    }
+
+    // Method to display the heap's nodes.
+    public void display() {
+        if (min == null) {
+            System.out.println("The heap is empty.");
+        } else {
+            System.out.println("The root nodes of Heap are:");
+            Node temp = min; // Start from the min node.
+            do {
+                System.out.print(temp.key + " "); // Print each node's key.
+                temp = temp.right; // Move to the next node.
+                if (temp != min) {
+                    System.out.print("--> "); // Print separator for nodes.
+                }
+            } while (temp != min);
+            System.out.println("\nThe heap has " + size + " nodes."); // Print the total number of nodes.
+        }
+    }
     
     public static void main(String[] args) {
-        /*
+        
         FibonacciHeap heap = new FibonacciHeap();
         heap.insert(4);
         heap.insert(3);
@@ -428,19 +543,23 @@ public class FibonacciHeap{
         heap1.insert(72);
         heap1.insert(19);
         heap1.insert(0);
-         System.out.println("Second Heap");
+        System.out.println("Second Heap");
         heap1.display();
-        heap.union(heap1);
-         System.out.println("Merged Heap");
+        heap.merge(heap1);
+        System.out.println("Merged Heap");
         heap.display();
-         System.out.println("Extracted Minimum");
-        heap.extractMin();
+        System.out.println("Extracted Minimum");
+        System.out.println( heap.extractMin().get_key());
+        System.out.println( heap.extractMin().get_key());
+        heap.display();
         heap.insert(0);
+        System.out.println( heap.extractMin().get_key());
+        heap.display();
         System.out.println(heap.min.key);
         heap.consolidate();
          System.out.println("Representation after Consolidation");
         heap.display1(); 
-        */
+        
 
     }
 }
