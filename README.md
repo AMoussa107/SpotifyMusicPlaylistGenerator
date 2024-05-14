@@ -26,6 +26,8 @@ Here's a list of elementary operations implemented in our version of the Fibonac
 | decreaseKey | Updates the priority value (key) of a certain node and performs necessary cuts and merges to maintain the min-heap properties within the tree |
 |delete| Decreases the key of the specified node to Negative infinity and then extracts Minimum value to remove it from the Heap and maintain structure|
 
+## Fibonacci Heap: Analysis
+The Fibonacci Heap structure does a great job of minimizing the complexity of the number operations needed to implement and use a priority queue. This is achieved through laziness that leads to amortized constant-time complexity. This structure only does work when it's necessary, and does it in a way that would make future operations easier. The insert method is a great example of what we call a "lazy" operation, wher instead of trying to add a new node to one of the existing heap-trees and placing it correctly, it just adds this new node to the root list creating a new heap-tree of order 0. The time complexity of our Fibonacci Heap operations is listed in the table below:
 
 
 ## Data
