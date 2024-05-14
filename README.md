@@ -17,8 +17,15 @@ The picture below describes the above structure:
 
 ## Fibonacci Heap: Operations
 Here's a list of elementary operations implemented in our version of the Fibonacci Heap:
-**Operation** | **Description**
-Insert | We insert a new node to the heap by adding it to the root list
+| Operation | Description     |
+|----|----------|
+|insert | We insert a new node to the heap by adding it to the root list|
+| min | Returns the minimum value from the root list | 
+| union  | Puts the root lists of two Fibonacci heaps together and updates pointers to maintain heap properties | 
+| extractMin  | Removes and returns the minimum node from the heap the consolidates the remaining trees to maintain heap structure|
+| decreaseKey | Updates the priority value (key) of a certain node and performs necessary cuts and merges to maintain the min-heap properties within the tree |
+|delete| Decreases the key of the specified node to Negative infinity and then extracts Minimum value to remove it from the Heap and maintain structure|
+
 
 
 ## Data
