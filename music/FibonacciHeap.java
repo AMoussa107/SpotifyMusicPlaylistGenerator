@@ -12,6 +12,7 @@ class Node {
     public Node child;
     public boolean mark;
     public String id;
+    public Song song;
 
     //constructor
     public Node() {
@@ -23,13 +24,20 @@ class Node {
         this.child = null;
     }
     //alternative constructor
-    public Node(int key_num, String id) {
+    public Node(int key_num, Song song, String id) {
         this ();
         this.key = key_num;
         this.id = id;
+        this.song = song;
     }
 
     //setter and getter methods for all instance variables
+    public Song get_song() {
+        return this.song;
+    }
+    public String get_Id() {
+        return this.id;
+    }
     public void set_key(int k) {
         this.key = k;
     }
@@ -112,8 +120,8 @@ public class FibonacciHeap{
         return min == null;
     }
     //insert new node in the heap   
-    public void insert(int key, String id) {
-        Node node = new Node(key, id);
+    public void insert(int key, Song song, String id) {
+        Node node = new Node(key, song, id);
         node.left = node;
         node.right = node;
 
@@ -322,7 +330,7 @@ public class FibonacciHeap{
     }
 
     //update a song score
-    public void updateScore(int nodeId, int newKey) {
+    public void updateScore(String nodeId, int newKey) {
         Node node = this.nodeHashMap.get(nodeId);
         if (node != null && newKey != node.key) {
             if (newKey < node.key) {
@@ -398,6 +406,7 @@ public class FibonacciHeap{
             } while (child != childStart);
         }
     }
+    
     public static void main(String[] args) {
         /*
         FibonacciHeap heap = new FibonacciHeap();

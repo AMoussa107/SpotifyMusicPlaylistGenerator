@@ -3,85 +3,175 @@ package music;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.util.Arrays;
 
 public class UserPreferenceGUI extends JFrame {
     private JComboBox<String>[] genreComboBoxes = new JComboBox[3];
     private JTextField[] artistFields = new JTextField[3];
-    private JSlider popularitySlider, durationSlider, danceabilitySlider, energySlider, loudnessSlider,
-            speechinessSlider, acousticSlider, instrumentalSlider, livenessSlider, valenceSlider, tempoSlider;
+    private JTextField numberSongs = new JTextField();
+    private JSlider[] attributeSliders, prioritySliders;
+    private JSlider genrePrioritySlider, artistPrioritySlider;
+    private JLabel remainingPriorityLabel;
     private JCheckBox explicitCheckBox;
+    private int totalPriority = 100;
+    private static String[] preferences;
+    private static int[] priorities;
+    private String filePath = "MusicDataSet.csv";
+    private static Ingest ingestInstance;
+    private boolean firstTime = true;
 
     public UserPreferenceGUI() {
         setTitle("Music Playlist Preferences");
-        setSize(650, 700); // Adjusted the size for better fit of all components
+        setSize(800, 900);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
-        setLayout(new GridLayout(0, 2, 10, 10));
+        setLayout(new GridLayout(0, 4, 10, 10));
+        String[] attributes = new String[]{"popularity", "duration", "danceability", "energy", "loudness",
+                "speechiness", "acoustic", "instrumental", "liveness", "valence", "tempo"};
 
-        // Genre selection with rankings
+       
         for (int i = 0; i < 3; i++) {
-            add(new JLabel("Choose your " + (i == 0 ? "top" : (i == 1 ? "second" : "third")) + " genre:"));
+            add(new JLabel("Genre " + (i + 1) + ":"));
             genreComboBoxes[i] = new JComboBox<>(getGenres());
             add(genreComboBoxes[i]);
+            if (i == 0) {
+                add(new JLabel("Genre Priority:"));
+                genrePrioritySlider = new JSlider(0, 100, 0);
+                add(genrePrioritySlider);
+                addSliderListener(genrePrioritySlider);
+            } else {
+                add(new JLabel(""));
+                add(new JLabel(""));
+            }
         }
 
-        // Artist input with rankings
         for (int i = 0; i < 3; i++) {
-            add(new JLabel("Enter your " + (i == 0 ? "favorite" : (i == 1 ? "second favorite" : "third favorite")) + " artist:"));
+            add(new JLabel("Artist " + (i + 1) + ":"));
             artistFields[i] = new JTextField();
             add(artistFields[i]);
+            if (i == 0) {
+                add(new JLabel("Artist Priority:"));
+                artistPrioritySlider = new JSlider(0, 100, 0);
+                add(artistPrioritySlider);
+                addSliderListener(artistPrioritySlider);
+            } else {
+                add(new JLabel(""));
+                add(new JLabel(""));
+            }
         }
 
-        // Sliders for various attributes
-        addSlider("Preferred popularity (1-100):", popularitySlider = new JSlider(1, 100, 50));
-        addSlider("Preferred duration (1-100 minutes):", durationSlider = new JSlider(1, 100, 50));
-        addSlider("Preferred danceability (1-100):", danceabilitySlider = new JSlider(1, 100, 50));
-        addSlider("Preferred energy (1-100):", energySlider = new JSlider(1, 100, 50));
-        addSlider("Preferred loudness (1-100):", loudnessSlider = new JSlider(1, 100, 50));
-        addSlider("Preferred speechiness (1-100):", speechinessSlider = new JSlider(1, 100, 50));
-        addSlider("Preferred acoustic (1-100):", acousticSlider = new JSlider(1, 100, 50));
-        addSlider("Preferred instrumental (1-100):", instrumentalSlider = new JSlider(1, 100, 50));
-        addSlider("Preferred liveness (1-100):", livenessSlider = new JSlider(1, 100, 50));
-        addSlider("Preferred valence (1-100):", valenceSlider = new JSlider(1, 100, 50));
-        addSlider("Preferred tempo (1-100):", tempoSlider = new JSlider(1, 100, 50));
+        attributeSliders = new JSlider[11];
+        prioritySliders = new JSlider[11];
+        for (int i = 0; i < attributeSliders.length; i++) {
+             add(new JLabel(attributes[i]));
+       attributeSliders[i] = new JSlider(0, 100, 0);
+                add(attributeSliders[i]);
+                addSliderListener(attributeSliders[i]);
+        add(new JLabel(attributes[i] + "Priority:"));
+        prioritySliders[i] = new JSlider(0, 100, 0);
+                add(prioritySliders[i]);
+                addSliderListener(prioritySliders[i]);
+        }
 
-        // Explicit content checkbox
         add(new JLabel("Are you okay with explicit songs?"));
         explicitCheckBox = new JCheckBox();
         add(explicitCheckBox);
+       
 
-        // Submit button to handle preferences
+        add(new JLabel("Number of songs:"));
+        numberSongs.setText("0");
+        add(numberSongs);
+     
+        remainingPriorityLabel = new JLabel("Remaining Priority: " + totalPriority);
+        add(remainingPriorityLabel);
+      
+
         JButton submitButton = new JButton("Generate Playlist");
         submitButton.addActionListener(this::submitPreferences);
         add(submitButton);
+     
 
         setVisible(true);
     }
 
-    private void submitPreferences(ActionEvent e) {
-        System.out.println("Genres:");
-        for (JComboBox<String> comboBox : genreComboBoxes) {
-            System.out.println(comboBox.getSelectedItem());
-        }
-        System.out.println("Artists:");
-        for (JTextField textField : artistFields) {
-            System.out.println(textField.getText());
-        }
-        System.out.println("Popularity: " + popularitySlider.getValue());
-        System.out.println("Valence: " + valenceSlider.getValue());
-        System.out.println("Explicit: " + explicitCheckBox.isSelected());
+    private void addSliderListener(JSlider slider) {
+        slider.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseReleased(MouseEvent e) {
+                int usedPriority = getTotalPriorityUsed();
+                int excess = usedPriority - totalPriority;
+                if (excess > 0) {
+                    slider.setValue(slider.getValue() - excess);
+                }
+                remainingPriorityLabel.setText("Remaining Priority: " + (totalPriority - getTotalPriorityUsed()));
+            }
+        });
     }
 
-    private void addSlider(String label, JSlider slider) {
-        add(new JLabel(label));
-        add(slider);
+    private int getTotalPriorityUsed() {
+        int total = genrePrioritySlider.getValue() + artistPrioritySlider.getValue();
+        for (JSlider slider : prioritySliders) {
+            total += slider.getValue();
+        }
+        return total;
+    }
+
+    private void submitPreferences(ActionEvent e) {
+        preferences = new String[genreComboBoxes.length + artistFields.length + attributeSliders.length];
+        priorities = new int[2 + prioritySliders.length]; // Two for genre and artist priorities and the rest for attributes
+
+        for (int i = 0; i < genreComboBoxes.length; i++) {
+            preferences[i] = (String) genreComboBoxes[i].getSelectedItem();
+        }
+        priorities[0] = genrePrioritySlider.getValue();
+
+        for (int i = 0; i < artistFields.length; i++) {
+            preferences[i + genreComboBoxes.length] = artistFields[i].getText();
+        }
+        priorities[1] = artistPrioritySlider.getValue();
+
+        for (int i = 0; i < attributeSliders.length; i++) {
+            preferences[i + genreComboBoxes.length + artistFields.length] = String.valueOf(attributeSliders[i].getValue());
+            priorities[i + 2] = prioritySliders[i].getValue();
+        }
+
+        if (firstTime) {
+            ingestInstance = new Ingest(filePath, preferences, priorities);
+            firstTime = false;
+        } else {
+            ingestInstance.preferences = preferences;
+            ingestInstance.priorities = priorities;
+            ingestInstance.updateAllScore();
+        }
+
+        String[] arr = ingestInstance.playlist(Integer.parseInt(numberSongs.getText()));
+
+        // Display the playlist in a new window
+        displayPlaylist(arr);
+    }
+
+    private void displayPlaylist(String[] playlist) {
+        JFrame playlistFrame = new JFrame("Generated Playlist");
+        playlistFrame.setSize(400, 300);
+        playlistFrame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        JList<String> playlistList = new JList<>(playlist);
+        JScrollPane scrollPane = new JScrollPane(playlistList);
+
+        playlistFrame.add(scrollPane);
+        playlistFrame.setVisible(true);
     }
 
     private String[] getGenres() {
-        return new String[]{"select genre", "chill", "afrobeat", "sertanejo", "goth", "house", "pagode", "psych-rock",
-                "trance", "salsa", "progressive-house", "rock", "pop", "jazz"};
+        return new String[]{"select genre", "afrobeat", "acoustic", "alt-rock", "alternative", "ambient", "anime", "black-metal", "bluegrass", "blues", "brazil", "breakfast", "british", "cantopop", "chicago-house", "children", "chill", "classical", "club", "comedy", "country", "dance", "dance-hall", "death-metal", "deep-house", "detroit-techno", "disney", "disco", "drum-and-bass", "dub", "dubstep", "edm", "electro", "electronic", "emo", "folk", "forro", "french", "funk", "garage", "german", "gospel", "goth", "grindcore", "groove", "grunge", "guitar", "happy", "hard-rock", "hardcore", "hardstyle", "heavy-metal", "hip-hop", "honky-tonk", "house", "idm", "indian", "indie", "indie-pop", "industrial", "iranian", "j-dance", "j-idol", "j-pop", "j-rock", "jazz", "k-pop", "kids", "latin", "latino", "malay", "mandopop", "metal", "metalcore", "minimal-techno", "mpb", "new-age", "opera", "pagode", "party", 
+"piano", "pop-film", "pop", "power-pop", "progressive-house", "psych-rock", "punk-rock", "punk", "r-n-b",
+"reggae", "reggaeton", "rock-n-roll", "rock", "rockabilly", "romance", "sad", "salsa", "samba", "sertanejo",
+"show-tunes", "singer-songwriter", "ska", "sleep", "songwriter", "soul", "spanish", "study", "swedish", 
+"synth-pop", "tango", "techno", "trance", "trip-hop", "turkish", "world-music"};
     }
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(UserPreferenceGUI::new);
+        UserPreferenceGUI playlistGenerator = new UserPreferenceGUI();
     }
 }
