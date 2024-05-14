@@ -4,16 +4,17 @@ import java.util.*;
 import java.io.File;
 import java.io.FileNotFoundException;
 
-public class ingest {
+public class Ingest {
     private SongHashMap songHashMap;
     public FibonacciHeap heap = new FibonacciHeap();
-    private int[] priorities;
-    private String[] preferences;
+    public int[] priorities;
+    public String[] preferences;
+    int dummy = 10000;
 
-    public ingest(String filePath) {
+    public Ingest(String filePath, String[] preferences, int[] priorities) {
         songHashMap = new SongHashMap(); // Initialize the class field instead of a local variable
-        preferences = getUserPreferences();
-        priorities = getUSerPriorities();
+        //preferences = getUserPreferences();
+        //priorities = getUSerPriorities();
         try {
             File file = new File(filePath);
             Scanner scanner = new Scanner(file);
@@ -53,7 +54,8 @@ public class ingest {
                     songHashMap.categorizeSong(songHashMap.hashMap, song);
                     song.score = score(song, preferences, priorities);
 
-                    heap.insert(song.score, song.get_id());
+                    heap.insert(song.score, song, song.get_id());
+
 
                 } catch (NumberFormatException e) {
                     System.out.println("Error parsing number from file: " + e.getMessage());
@@ -64,7 +66,7 @@ public class ingest {
             System.out.println("File not found: " + e.getMessage());
         }
     }
-    public int score(Song song, String [] preferences, int[] priorities){
+    public int score(Song song, String [] preferences, int[] priorities) {
         //genre
         int finalScore= Integer.MAX_VALUE;
         if (song.get_genre().equals(preferences[0])) {
@@ -90,6 +92,7 @@ public class ingest {
             }
 
         }
+      
         //album
         int popularity_score = (int) ((100-Math.abs(song.get_popularity() - Integer.parseInt(preferences[6])))*priorities[2]/100);
         finalScore -= popularity_score; 
@@ -128,6 +131,13 @@ public class ingest {
         return finalScore;
     }
 
+    public void updateAllScore() {
+        for (Node node : this.heap.nodeHashMap.values()) {
+            Song song = node.get_song();
+            int newScore = score(song, this.preferences, this.priorities);
+            heap.updateScore(song.get_id(), newScore);
+        }
+    }
     public String[] getUserPreferences()
     {
         String[] str = new String[17];
@@ -191,14 +201,25 @@ public class ingest {
         return arr;
 
     }
-    public static void main(String[] args) {
-        String filePath = "MusicDataSet.csv";
-        ingest ingestInstance = new ingest(filePath);
-        for (int i=0; i<10; i++)
-        {
-            String ids = ingestInstance.heap.extractMin().id;
-        System.out.println(ids);
+    public String[] playlist(int n) {
+        String[] arr = new String[n];
+        Node[] arr1 = new Node[n];
+        for (int i=0; i<n; i++) {
+            Node node = this.heap.extractMin();
+            arr1 [i] = node;
+            Song songs = node.get_song();
+            String artist = Arrays.toString(songs.get_artist());
+            String title = songs.get_name();
+            arr[i] = title + " by " + artist;
         }
+        for (Node node : arr1) {
+            this.heap.insert(node.get_key(), node.get_song(), node.get_Id());
+        }
+        return arr;
+    }
+    public static void main(String[] args) {
+        //String filePath = "MusicDataSet.csv";
+        //ingest ingestInstance = new ingest(filePath);
         
 
 
