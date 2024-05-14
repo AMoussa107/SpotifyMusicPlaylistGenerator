@@ -106,7 +106,9 @@ java -cp bin music.UserPreferencesGUI
 ```
 ## References:
 - Data Set: [https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset](https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset)
-
+- Fibonacci Heap Visualization: [https://www.cs.usfca.edu/~galles/visualization/FibonacciHeap.html](https://www.cs.usfca.edu/~galles/visualization/FibonacciHeap.html)
+- Fibonacci Heap description and analysis: [https://6.5210.csail.mit.edu/scribe/s1-fibheaps/s1-fibheaps.html#:~:text=A%20Fibonacci%20heap%20H%20is,(the%20“root%20list”%20of&text=The%20root%20of%20each%20tree,a%20heap%2Dordered%20tree)%3B](https://6.5210.csail.mit.edu/scribe/s1-fibheaps/s1-fibheaps.html#:~:text=A%20Fibonacci%20heap%20H%20is,(the%20“root%20list”%20of&text=The%20root%20of%20each%20tree,a%20heap%2Dordered%20tree)%3B)
+- 
 
 
 
