@@ -42,9 +42,12 @@ The Fibonacci Heap structure does a great job of minimizing the complexity of th
 ## Application
 We are making use of a priority queue ADT (implemented with the Fibonacci Heap) to generate (queue) songs from our data set into a playlist. The key of each song node that's being added to the heap is determined through input from the user of their preferences and then scoring each song based on how well its attributes match the user preferred attributes. The input from the user is taken through a graphical interface with sliders, drop down menus, checkboxes, and textboxes, and then after submitting their preferences, we extract the first n minimum values from the heap where n is the number of songs the user wants in the playlist. This is how the interface looks like: 
 
-<img width="796" alt="Screenshot 2024-05-14 at 1 35 25 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/57a48f31-4082-4bc5-995a-0b0ce1bd24cb">
+<img width="800" alt="Screenshot 2024-05-14 at 2 06 06 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/b985d726-7e76-43b3-9347-5ecebaf1df68">
 
-Each slider in the interface can be set to a value between 0 and 100. The user has 100 priority points to distribute among different attributes and how important they are to the generation of their playlist. These priorities are taken into consideration when scoring the songs. 
+This interface was implemented using the Javax.swing and Java.awt packages used in lab 2. Input is taken from the user through the attribute textboxes, dropdown menus, sliders, and priority sliders. Each slider in the interface can be set to a value between 0 (min) and 100 (max). The meaning of the value of attribute sliders will be explained when we come to the data set demonstration. The Priority slider value determines the weight of matching each attribute to our list of songs, which is used to calculate the scores that we will use to insert the songs into the priority queue to generate the playlist. The user can make certain attributes contribute more, or less, to the generation of the playlist according to how important they think it is. The user can choose to include or not include explicit songs in their playlist through a checkbox. After selecting their preferences, the user can then add the number of songs they want on the playlist and click the "Generate Playlist" button. After clicking the button, the playlist is displayed in a window with each track's title and list of artists as follows: 
+<img width="798" alt="Screenshot 2024-05-14 at 2 24 49 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/922e43c1-aeaa-426d-8e4e-9b984071be0f">
+
+
 
 
 
