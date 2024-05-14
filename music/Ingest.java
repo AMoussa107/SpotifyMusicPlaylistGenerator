@@ -16,8 +16,6 @@ public class Ingest {
     // and inserts all the songs into a Fibonacci Heap
     public Ingest(String filePath, String[] preferences, int[] priorities) {
         songHashMap = new SongHashMap(); // Initialize the class field instead of a local variable
-        //preferences = getUserPreferences();
-        //priorities = getUSerPriorities();
         try {
             File file = new File(filePath);
             Scanner scanner = new Scanner(file);
@@ -60,7 +58,6 @@ public class Ingest {
                     // Use score method to calculate a score for each song
                     song.score = score(song, preferences, priorities);
 
-                    // Insert songs with calculated scores into the heap
                     heap.insert(song.score, song, song.get_id());
 
 
@@ -77,77 +74,74 @@ public class Ingest {
     // Calculate score for a given song based on preferences and priorities
     public int score(Song song, String [] preferences, int[] priorities) {
         // Set the intial score to the maximum possible valaue
-        int finalScore= Integer.MAX_VALUE;
+        int finalScore = Integer.MAX_VALUE;
         // Decrease the score calculated based on preferences from the 
         // intial max score so that the higher ranked songs would have
         // a lower final score
 
         // Genre Score
         if (song.get_genre().equals(preferences[0])) {
-            finalScore -= 100 * (priorities[0]/100);
+            finalScore -= 100 * (priorities[0] / 100);
+        } else if (song.get_genre().equals(preferences[1])) {
+            finalScore -= 50 * priorities[0] / 100;
+        } else if (song.get_genre().equals(preferences[2])) {
+            finalScore -= 20 * priorities[0] / 100;
         }
-        else if (song.get_genre().equals(preferences[1])) {
-            finalScore-= 50 * priorities[0]/100;
-        }
-        else if (song.get_genre().equals(preferences[2])) {
-            finalScore -= 20 * priorities[0]/100;
-        }
+
         // Artist Score
         for (String artist : song.get_artist()) {
             if (artist.equals(preferences[3])) {
-                finalScore -= 100 * priorities[1]/100;
+                finalScore -= 100 * priorities[1] / 100;
+            } else if (artist.equals(preferences[4])) {
+                finalScore -= 50 * priorities[1] / 100;
+            } else if (artist.equals(preferences[5])) {
+                finalScore -= 20 * priorities[1] / 100;
             }
-            else if (artist.equals(preferences[4])) {
-                finalScore -= 50 * priorities[1]/100;
-            }
-            else if (artist.equals(preferences[5])) {
-                finalScore -= 20 * priorities[1]/100;
-            }
-
         }
-      
-        // popularity Score 
-        int popularity_score = (int) ((100-Math.abs(song.get_popularity() - Integer.parseInt(preferences[6])))*priorities[2]/100);
-        finalScore -= popularity_score; 
-        //duration
-        int duration_score = (int) ((100-Math.abs(song.get_duration() - Integer.parseInt(preferences[7])))*priorities[3]/100);
-        finalScore -= duration_score; 
-        //explicity
+        
+        // Popolarity
+        int popularity_score = (int) ((100 - Math.abs(song.get_popularity() - Integer.parseInt(preferences[6]))) * priorities[2] / 100);
+        finalScore -= popularity_score;
+
+        // Duration
+        int duration_score = (int) ((100 - Math.abs(song.get_duration() - Integer.parseInt(preferences[7]))) * priorities[3] / 100);
+        finalScore -= duration_score;
+
         if (song.get_explicit() == Boolean.parseBoolean(preferences[8])) {
-            finalScore -= 100 * priorities[4]/100; 
+            finalScore -= 100 * priorities[4] / 100;
         }
 
-        //danceability Score
-        int danceability_score = (int) ((100-Math.abs(song.get_dance() - Integer.parseInt(preferences[9])))*priorities[5]/100);
-        finalScore -= danceability_score; 
+        // Danceability
+        int danceability_score = (int) ((100 - Math.abs(song.get_dance() - Integer.parseInt(preferences[9]))) * priorities[5] / 100);
+        finalScore -= danceability_score;
 
-        //loudness Score
-        int loudness_score = (int) ((100-Math.abs(song.get_loudness() - Integer.parseInt(preferences[10])))*priorities[6]/100);
+        // Loudness
+        int loudness_score = (int) ((100 - Math.abs(song.get_loudness() - Integer.parseInt(preferences[10]))) * priorities[6] / 100);
         finalScore -= loudness_score;
 
-        //acoustic Score
-        int acoustic_score = (int) ((100-Math.abs(song.get_acoustic() - Integer.parseInt(preferences[11])))*priorities[7]/100);
-        finalScore -= acoustic_score;  
+        // Acoustic
+        int acoustic_score = (int) ((100 - Math.abs(song.get_acoustic() - Integer.parseInt(preferences[11]))) * priorities[7] / 100);
+        finalScore -= acoustic_score;
 
-        //instrumental Score
-        int instrumental_score =  (int) ((100-Math.abs(song.get_instrumental() - Integer.parseInt(preferences[12])))*priorities[8]/100);
-        finalScore -= instrumental_score;  
+        // Instrumental
+        int instrumental_score = (int) ((100 - Math.abs(song.get_instrumental() - Integer.parseInt(preferences[12]))) * priorities[8] / 100);
+        finalScore -= instrumental_score;
 
-        //valence Score
-        int valence_score = (int) ((100-Math.abs(song.get_valence() - Integer.parseInt(preferences[13])))*priorities[9]/100);
+        // Valence
+        int valence_score = (int) ((100 - Math.abs(song.get_valence() - Integer.parseInt(preferences[13]))) * priorities[9] / 100);
         finalScore -= valence_score;
 
-        //tempo Score
-        int tempo_score = (int) ((100-Math.abs(song.get_tempo() - Integer.parseInt(preferences[14])))*priorities[10]/100);
+        // Tempo
+        int tempo_score = (int) ((100 - Math.abs(song.get_tempo() - Integer.parseInt(preferences[14]))) * priorities[10] / 100);
         finalScore -= tempo_score;
 
-        //energy Score
-        int energy_score = (int) ((100-Math.abs(song.get_energy() - Integer.parseInt(preferences[15])))*priorities[11]/100);
+        // Energy
+        int energy_score = (int) ((100 - Math.abs(song.get_energy() - Integer.parseInt(preferences[15]))) * priorities[11] / 100);
         finalScore -= energy_score;
 
-        //liveness Score
-        int liveness_score = (int) ((100-Math.abs(song.get_liveness() - Integer.parseInt(preferences[16])))*priorities[12]/100);
-        finalScore -= energy_score;
+        // Liveness
+        int liveness_score = (int) ((100 - Math.abs(song.get_liveness() - Integer.parseInt(preferences[16]))) * priorities[12] / 100);
+        finalScore -= liveness_score;
 
         return finalScore;
     }
@@ -157,6 +151,7 @@ public class Ingest {
     public void updateAllScore() {
         for (Node node : this.heap.nodeHashMap.values()) {
             Song song = node.get_song();
+            song.score = Integer.MAX_VALUE;
             int newScore = score(song, this.preferences, this.priorities);
             heap.updateScore(song.get_id(), newScore);
         }
@@ -228,47 +223,54 @@ public class Ingest {
 
     // Returns a playlist of songs based on song scores
     public String[] playlist(int n) {
-        String[] arr = new String[n];
-        Node[] arr1 = new Node[n];
-        // Track played songs using a set
-        Set<String> playedSongs = new HashSet<>();
-
-        for (int i = 0; i < n; i++) {
-            // Break if heap is empty
-            if (this.heap.isEmpty()) {
-                break;  
-            }
+        Set<String> arr = new HashSet<>();
+        Set<Node> arr1 = new HashSet<>();
+        // Extract the n songs with the smallest score
+        while (arr.size() < n) {
             Node node = this.heap.extractMin();
-            Song song = node.get_song();
-            String songId = song.get_id();
-
-            if (playedSongs.contains(songId)) {
-                i--;  // Go back to the same node and retry with the next node
-                continue;  // Continue extracting
-            }
-            // Mark the song as played
-            playedSongs.add(songId);  
-            arr1[i] = node;
-            String artist = Arrays.toString(song.get_artist());
-            String title = song.get_name();
-            arr[i] = title + " by " + artist;
+            arr1.add(node);
+            Song songs = node.get_song();
+            String artist = Arrays.toString(songs.get_artist());
+            String title = songs.get_name();
+            arr.add(title + " by " + artist);
         }
 
-        // Reinsert extracted nodes back into the heap
+        // Reinsurt the extracted songs back into the Heap
         for (Node node : arr1) {
-            if (node != null) {
-                this.heap.insert(node.get_key(), node.get_song(), node.get_Id());  
-            }
+            this.heap.insert(node.get_key(), node.get_song(), node.get_Id());
         }
-        // Return the playlist
-        return arr;
+        return arr.toArray(new String[arr.size()]);
+    }
+
+    public static void testPlaylist() {
+        // Define test data
+        String filePath = "MusicDataSet.csv";
+        String[] testPreferences = {"pop", "rock", "jazz", "Sia", "Taylor Swift", "Artist3", "50", "200", "true", "50", "60", "70", "40", "30", "100", "80", "70"};
+        int[] testPriorities = {10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10, 10};
+        
+        // Initilization
+        Ingest ingest = new Ingest(filePath, testPreferences, testPriorities);
+        
+        // Generate Playlist of 7 songs
+        String[] playlist = ingest.playlist(6);
+        
+        // Print the playlist
+        System.out.println("Generated Playlist:");
+        for (String song : playlist) {
+            System.out.println(song);
+        }
+        
+        // Ensure no duplicate songs
+        Set<String> songSet = new HashSet<>(Arrays.asList(playlist));
+        if (songSet.size() != playlist.length) {
+            System.out.println("Error: Playlist contains duplicate songs.");
+        } else {
+            System.out.println("Playlist contains unique songs.");
+        }
     }
 
     public static void main(String[] args) {
-        //String filePath = "MusicDataSet.csv";
-        //ingest ingestInstance = new ingest(filePath);
-        
-
-
+        // Test the playlist function
+        testPlaylist();
     }
 }

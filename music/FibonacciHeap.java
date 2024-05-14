@@ -18,14 +18,14 @@ class Node {
         this.key = key;
         this.degree = 0;
         this.parent = null;
-        this.left = null;
-        this.right = null;
+        this.left = this;
+        this.right = this;
         this.child = null;
+        this.mark = false;
     }
     //Alternative constructor for playlist application
     public Node(int key_num, Song song, String id) {
         this (key_num);
-        this.key = key_num;
         this.id = id;
         this.song = song;
     }
@@ -270,14 +270,13 @@ public class FibonacciHeap{
     //Finds and updates minimum node
     private void consolidate() {
         //the potential maximum degree of the heap based on Fibonacci sequence
-        int num = (int) Math.ceil(Math.log(this.size) / Math.log(2));
+        int num = (int) Math.ceil(Math.log(this.size) / Math.log(2)) + 1;
         Node[] arr = new Node[num];
         
         //Get all the nodes in the rootlist
         ArrayList<Node> nodes = iterate(this.root_list);
         //Check if there are two root nodes with same degree
-        for (int i = 0; i < nodes.size(); i++) {
-            Node node1 = nodes.get(i);
+        for (Node node1 : nodes) {
             int deg = node1.degree;
 
             //If two nodes have the same degreee attach the node with bigger
@@ -320,15 +319,15 @@ public class FibonacciHeap{
         // Remove the first noe from the root list
         // Remove its circular links
         this.remove_from_rootList(node1);
-        node1.left = node1;
-        node1.right = node1;
         // Link the removed node to the children
         // of the second node
         merge_to_child_list(node2, node1);
-        // Update the degree of the second node
-        ++node2.degree;
         // Assign the second as the parent of the first
         node1.parent = node2;
+
+        // Update the degree of the second node
+        node2.degree++;
+   
         // Mark that the first flag has not lost a child
         // ever since it was made a child of the second
         node1.mark = false;
@@ -356,7 +355,7 @@ public class FibonacciHeap{
         // If the parent node is empty, assign the new node as its child
         if (parent.child == null) {
             parent.child = node;
-            node.parent = parent;
+            //node.parent = parent;
             // Remove the new node's link from its left and right nodes
             node.right = node;
             node.left = node;
@@ -381,7 +380,6 @@ public class FibonacciHeap{
         }
         // Update the key
         node1.key = key; 
-        // 
         Node node2 = node1.parent;
         // If the node's key is smaller than its parent now
         // Update the heap using cut and cascading cut
@@ -425,17 +423,18 @@ public class FibonacciHeap{
     // Removes a node from its parent's child list
     private void removeChildFromList(Node parent, Node node) {
         // If node is the only child, then set parent's child to null
-        if (parent.child == parent.child.right) {
+        if (node== node.right) {
             parent.child = null;
         } 
         // If node is the first child, move the child pointer to the next node
-        else if (parent.child == node) {
-            parent.child = node.right;
-            node.right.parent = parent;
+        else {
+            if (parent.child == node) {
+                parent.child = node.right;
+            }
+            // Remove the node from the lsit by removing its links from the nodes in list
+            node.right.left = node.left;
+            node.left.right = node.right;
         }
-        // Remove the node from the lsit by removing its links from the nodes in list
-        node.left.right = node.right;
-        node.right.left = node.left;
     }
 
     // Deletes a node from the heap 
@@ -457,11 +456,10 @@ public class FibonacciHeap{
                 decreaseKey(node, newKey);
             }
             // Update score if node is greater the key
-            else if (newKey > node.key) {
+            // Update heap structure
+            else {
                 node.key = newKey;
-                delete(node);
-                insert(node.get_key(), node.get_song(), node.get_Id());
-
+                consolidate();
             }
         }
     }
