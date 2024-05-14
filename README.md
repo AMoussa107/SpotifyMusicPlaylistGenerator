@@ -80,8 +80,30 @@ Here's a breakdown of what the used attributes in our application mean:
 |tempo |The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration|
 |track_genre|The genre in which the track belongs out of more than 125 genres list|
 
+## Usage:
+To use this program, clone this github repository to your local machine. Before you compile and run this program, make sure you are in the same directory this `README.md` lives in on your terminal. To check, run `pwd` on the Terminal. You should see something like (although not the same as)
 
+```
+/SpotifyPlaylistGenerator/
+``` 
 
+First, make a bin directory where Java will store and read the .class files.
+
+```
+mkdir bin
+```
+
+Then run the following command to compile your programs 
+
+```
+javac -d bin music/*.java
+```
+
+Run the following command to execute: 
+
+```
+java -cp bin music.UserPreferencesGUI
+```
 
 
 
