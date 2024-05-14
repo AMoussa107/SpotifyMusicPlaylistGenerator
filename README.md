@@ -108,7 +108,12 @@ java -cp bin music.UserPreferencesGUI
 - Data Set: [https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset](https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset)
 - Fibonacci Heap Visualization: [https://www.cs.usfca.edu/~galles/visualization/FibonacciHeap.html](https://www.cs.usfca.edu/~galles/visualization/FibonacciHeap.html)
 - Fibonacci Heap description and analysis: [https://6.5210.csail.mit.edu/scribe/s1-fibheaps/s1-fibheaps.html#:~:text=A%20Fibonacci%20heap%20H%20is,(the%20“root%20list”%20of&text=The%20root%20of%20each%20tree,a%20heap%2Dordered%20tree)%3B](https://6.5210.csail.mit.edu/scribe/s1-fibheaps/s1-fibheaps.html#:~:text=A%20Fibonacci%20heap%20H%20is,(the%20“root%20list”%20of&text=The%20root%20of%20each%20tree,a%20heap%2Dordered%20tree)%3B)
-- 
+- User Interface Documentation: [https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/index.html?javax/swing/JSlider.html](https://docs.oracle.com/javase%2F7%2Fdocs%2Fapi%2F%2F/index.html?javax/swing/JSlider.html)
+- Fibonacci Heap Conceptual explanation: [https://youtu.be/6JxvKfSV9Ns?si=dGfdsSc9RdWznv2Z](https://youtu.be/6JxvKfSV9Ns?si=dGfdsSc9RdWznv2Z)
+- Pseudocode: [https://www.javatpoint.com/fibonacci-heap](https://www.javatpoint.com/fibonacci-heap)
+
+
+
 
 
 
