@@ -39,7 +39,7 @@ public class UserPreferenceGUI extends JFrame {
                 add(new JLabel("Genre Priority:"));
                 genrePrioritySlider = new JSlider(0, 100, 0);
                 add(genrePrioritySlider);
-                addSliderListener(genrePrioritySlider);
+                genrePrioritySlider.addMouseListener(new MouseListener());
             } else {
                 add(new JLabel(""));
                 add(new JLabel(""));
@@ -54,7 +54,7 @@ public class UserPreferenceGUI extends JFrame {
                 add(new JLabel("Artist Priority:"));
                 artistPrioritySlider = new JSlider(0, 100, 0);
                 add(artistPrioritySlider);
-                addSliderListener(artistPrioritySlider);
+                artistPrioritySlider.addMouseListener(new MouseListener());
             } else {
                 add(new JLabel(""));
                 add(new JLabel(""));
@@ -67,11 +67,11 @@ public class UserPreferenceGUI extends JFrame {
              add(new JLabel(attributes[i]));
        attributeSliders[i] = new JSlider(0, 100, 0);
                 add(attributeSliders[i]);
-                addSliderListener(attributeSliders[i]);
+                attributeSliders[i].addMouseListener(new MouseListener());
         add(new JLabel(attributes[i] + "Priority:"));
         prioritySliders[i] = new JSlider(0, 100, 0);
                 add(prioritySliders[i]);
-                addSliderListener(prioritySliders[i]);
+                prioritySliders[i].addMouseListener(new MouseListener());
         }
 
         add(new JLabel("Are you okay with explicit songs?"));
@@ -82,11 +82,6 @@ public class UserPreferenceGUI extends JFrame {
         add(new JLabel("Number of songs:"));
         numberSongs.setText("0");
         add(numberSongs);
-     
-        remainingPriorityLabel = new JLabel("Remaining Priority: " + totalPriority);
-        add(remainingPriorityLabel);
-      
-
         JButton submitButton = new JButton("Generate Playlist");
         submitButton.addActionListener(this::submitPreferences);
         add(submitButton);
@@ -94,29 +89,12 @@ public class UserPreferenceGUI extends JFrame {
 
         setVisible(true);
     }
-
-    private void addSliderListener(JSlider slider) {
-        slider.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseReleased(MouseEvent e) {
-                int usedPriority = getTotalPriorityUsed();
-                int excess = usedPriority - totalPriority;
-                if (excess > 0) {
-                    slider.setValue(slider.getValue() - excess);
-                }
-                remainingPriorityLabel.setText("Remaining Priority: " + (totalPriority - getTotalPriorityUsed()));
-            }
-        });
+class MouseListener extends MouseAdapter {
+   @Override
+    public void mouseClicked(MouseEvent e) {
+        int value = genrePrioritySlider.getValue();
     }
-
-    private int getTotalPriorityUsed() {
-        int total = genrePrioritySlider.getValue() + artistPrioritySlider.getValue();
-        for (JSlider slider : prioritySliders) {
-            total += slider.getValue();
-        }
-        return total;
-    }
-
+}
     private void submitPreferences(ActionEvent e) {
         preferences = new String[genreComboBoxes.length + artistFields.length + attributeSliders.length];
         priorities = new int[2 + prioritySliders.length]; // Two for genre and artist priorities and the rest for attributes
