@@ -44,5 +44,7 @@ We are making use of a priority queue ADT (implemented with the Fibonacci Heap) 
 
 <img width="796" alt="Screenshot 2024-05-14 at 1 35 25 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/57a48f31-4082-4bc5-995a-0b0ce1bd24cb">
 
+Each slider in the interface can be set to a value between 0 and 100. The user has 100 priority points to distribute among different attributes and how important they are to the generation of their playlist. These priorities are taken into consideration when scoring the songs. 
+
 
 
