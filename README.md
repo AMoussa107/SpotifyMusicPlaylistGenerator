@@ -104,6 +104,10 @@ Run the following command to execute:
 ```
 java -cp bin music.UserPreferenceGUI
 ```
+
+## Future Extensions:
+There's an additional class created to categorize songs into a hashmap of attributes that contains other hashmaps of different values of these attributes. This class could be used for an extension of the program to track user activity and find links to similar songs to their listening activity through creating a weighted graph. 
+
 ## References:
 - Data Set: [https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset](https://www.kaggle.com/datasets/maharshipandya/-spotify-tracks-dataset)
 - Fibonacci Heap Visualization: [https://www.cs.usfca.edu/~galles/visualization/FibonacciHeap.html](https://www.cs.usfca.edu/~galles/visualization/FibonacciHeap.html)
