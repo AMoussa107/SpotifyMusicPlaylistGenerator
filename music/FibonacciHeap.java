@@ -83,7 +83,7 @@ class Node {
 
 }
 
-public class FibonacciHeap{
+public class FibonacciHeap implements PriorityQueue{
     //instance variables
     private int size; //Number of nodes in the heap
     private Node min; //The node with minimum key
