@@ -71,7 +71,15 @@ Here's a breakdown of what the used attributes in our application mean:
 |explicit|Whether or not the track has explicit lyrics (true = yes it does; false = no it does not OR unknown)|
 |danceability|Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0 is least danceable and 100 is most danceable|
 |energy|Energy is a measure from 0 to 100 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale|
-|loudnes|The overall loudness of a track in decibels (dB)|
+|loudness|The overall loudness of a track in decibels (dB)|
+|speechiness|Speechiness detects the presence of spoken words in a track. The more exclusively speech-like the recording (e.g. talk show, audio book, poetry), the closer to 100 the attribute value|
+|acousticness |A confidence measure from 0 to 100 of whether the track is acoustic. 100 represents high confidence the track is acoustic|
+|instrumentalness |Predicts whether a track contains no vocals. "Ooh" and "aah" sounds are treated as instrumental in this context. Rap or spoken word tracks are clearly "vocal". The closer the instrumentalness value is to 100, the greater likelihood the track contains no vocal content|
+|liveness|Detects the presence of an audience in the recording. Higher liveness values represent an increased probability that the track was performed live|
+|valence|A measure from 0 to 100 describing the musical positiveness conveyed by a track. Tracks with high valence sound more positive (e.g. happy, cheerful, euphoric), while tracks with low valence sound more negative (e.g. sad, depressed, angry)|
+|tempo |The overall estimated tempo of a track in beats per minute (BPM). In musical terminology, tempo is the speed or pace of a given piece and derives directly from the average beat duration|
+|track_genre|The genre in which the track belongs out of more than 125 genres list|
+
 
 
 
