@@ -49,7 +49,7 @@ This interface was implemented using the Javax.swing and Java.awt packages used 
 <img width="798" alt="Screenshot 2024-05-14 at 2 24 49 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/922e43c1-aeaa-426d-8e4e-9b984071be0f">
 
 ## Data Set:
-For playlist generation, we ingest songs from a csv data set of about 114,000 spotify tracks that has each song with its attributes in > MusicDataSet.csv < . Each track has a Spotify id attributes that are separated by commas. The first three lines in the data set look like this: 
+For playlist generation, we use a data set of about 114,000 spotify tracks that has each song with its attributes ingested from MusicDataSet.csv. Each track has a Spotify id attributes that are separated by commas. The first three lines in the data set look like this: 
 
 ```
 0,5SuOikwiRyPMVoIQDJUgSV,Gen Hoshino,Comedy,Comedy,73,3.844431796,FALSE,67.6,46.1,1,13.492,0,14.3,3.22,0.000101,35.8,71.5,36.03155738,4,acoustic
