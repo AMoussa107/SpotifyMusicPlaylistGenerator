@@ -45,7 +45,35 @@ We are making use of a priority queue ADT (implemented with the Fibonacci Heap) 
 <img width="800" alt="Screenshot 2024-05-14 at 2 06 06 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/b985d726-7e76-43b3-9347-5ecebaf1df68">
 
 This interface was implemented using the Javax.swing and Java.awt packages used in lab 2. Input is taken from the user through the attribute textboxes, dropdown menus, sliders, and priority sliders. Each slider in the interface can be set to a value between 0 (min) and 100 (max). The meaning of the value of attribute sliders will be explained when we come to the data set demonstration. The Priority slider value determines the weight of matching each attribute to our list of songs, which is used to calculate the scores that we will use to insert the songs into the priority queue to generate the playlist. The user can make certain attributes contribute more, or less, to the generation of the playlist according to how important they think it is. The user can choose to include or not include explicit songs in their playlist through a checkbox. After selecting their preferences, the user can then add the number of songs they want on the playlist and click the "Generate Playlist" button. After clicking the button, the playlist is displayed in a window with each track's title and list of artists as follows: 
+
 <img width="798" alt="Screenshot 2024-05-14 at 2 24 49 AM" src="https://github.com/AMoussa107/Fibonacci-Heap-CS136-Final-Project/assets/150184302/922e43c1-aeaa-426d-8e4e-9b984071be0f">
+
+## Data Set:
+For playlist generation, we ingest songs from a csv data set of spotify tracks that has each song with its attributes. Each track has a Spotify id attributes that are separated by commas. The first three lines in the data set look like this: 
+
+```
+0,5SuOikwiRyPMVoIQDJUgSV,Gen Hoshino,Comedy,Comedy,73,3.844431796,FALSE,67.6,46.1,1,13.492,0,14.3,3.22,0.000101,35.8,71.5,36.03155738,4,acoustic
+1,4qPNDBW1i3p13qLCt0Ki3A,Ben Woodward,Ghost (Acoustic),Ghost - Acoustic,55,2.493499003,FALSE,42,16.6,1,34.47,1,7.63,92.4,0.000556,10.1,26.7,31.75778688,4,acoustic
+2,1iJBSr7s7jYXzM8EGcbK5b,Ingrid Michaelson;ZAYN,To Begin Again,To Begin Again,57,3.513765261,FALSE,43.8,35.9,0,19.468,1,5.57,21,0,11.7,12,31.28360656,4,acoustic
+
+```
+The values in each line in order are: track_number,track_id,artists,album_name,track_name,popularity,duration_mins,explicit,danceability,energy,key,loudness,mode,speechiness,acousticness,instrumentalness,liveness,valence,tempo,time_signature,track_genre
+
+Here's a breakdown of what the used attributes in our application mean: 
+
+| Attribute | Definition | 
+|----|----------|
+|track_id| The Spotify ID for the track |
+|artists|The list of artists' names who performed the track. If there is more than one artist, they are separated by a ';'|
+|track_name|Name of the track|
+|popularity|The popularity of a track is a value between 0 and 100, with 100 being the most popular|
+|duration_mins|The track's duration in minutes|
+|explicit|Whether or not the track has explicit lyrics (true = yes it does; false = no it does not OR unknown)|
+|danceability|Danceability describes how suitable a track is for dancing based on a combination of musical elements including tempo, rhythm stability, beat strength, and overall regularity. A value of 0 is least danceable and 100 is most danceable|
+|energy|Energy is a measure from 0 to 100 and represents a perceptual measure of intensity and activity. Typically, energetic tracks feel fast, loud, and noisy. For example, death metal has high energy, while a Bach prelude scores low on the scale|
+|loudnes|The overall loudness of a track in decibels (dB)|
+
+
 
 
 
